@@ -1,0 +1,104 @@
+{
+  "name": "Ammad Iftikhar",
+  "role": "Front-End Developer",
+  "tagline": "I build dynamic, responsive, user-friendly web apps.",
+  "summary": "Passionate and detail-oriented Front-End Developer with expertise in React.js, JavaScript, and Tailwind CSS. I build dynamic, responsive, and user-friendly web applications with a focus on performance and clean UI/UX. My approach combines technical excellence with creative problem-solving to deliver exceptional user experiences.",
+  "contact": {
+    "phone": "+92-307-1074195",
+    "email": "ammadiftikhar07@gmail.com",
+    "location": "Pakistan",
+    "github": "https://github.com/ammadiftikhar",
+    "linkedin": "https://linkedin.com/in/ammadiftikhar",
+    "resume": "/resume.pdf"
+  },
+  "skills": {
+    "Web Technologies": [
+      { "name": "HTML", "level": 9 },
+      { "name": "CSS", "level": 9 },
+      { "name": "JavaScript", "level": 9 },
+      { "name": "React.js", "level": 9 }
+    ],
+    "Styling & UI": [
+      { "name": "Tailwind CSS", "level": 9 },
+      { "name": "Bootstrap 5", "level": 8 },
+      { "name": "Styled Components", "level": 7 }
+    ],
+    "State Management": [
+      { "name": "Redux Toolkit", "level": 8 },
+      { "name": "Context API", "level": 7 }
+    ],
+    "Tools": [
+      { "name": "Git/GitHub", "level": 9 },
+      { "name": "Figma", "level": 8 },
+      { "name": "VS Code", "level": 9 }
+    ]
+  },
+  "experience": [
+    {
+      "company": "Firefly Tech Solutions",
+      "title": "Software Engineer",
+      "period": "Feb 2024 – Present",
+      "highlights": [
+        "Developing new features and maintaining projects in ReactJS and CodeIgniter",
+        "Shipping scalable, high-performance UIs that serve thousands of users",
+        "Collaborating with cross-functional teams to deliver pixel-perfect designs"
+      ]
+    },
+    {
+      "company": "Nexgen Solution",
+      "title": "Internee",
+      "period": "Jun 2022 – Sep 2022",
+      "highlights": [
+        "Built optimized React components for dynamic, responsive applications",
+        "Improved interactivity and UX through data-driven design decisions",
+        "Gained hands-on experience with modern frontend development practices"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "AI Attorney",
+      "category": "Web Application",
+      "stack": ["Remix.js", "Tailwind CSS", "PostgreSQL"],
+      "summary": "Built landing, draft, and library screens for an AI-powered legal platform that helps lawyers streamline their workflow and access legal resources efficiently.",
+      "image": "https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "features": ["AI-powered legal research", "Document drafting", "Legal library management", "Responsive design"],
+      "github": "#",
+      "demo": "#"
+    },
+    {
+      "id": 2,
+      "name": "Metro Pakistan Assessment",
+      "category": "Enterprise",
+      "stack": ["React.js", "Tailwind CSS", "NestJS", "PostgreSQL"],
+      "summary": "Employee assessment application enabling comprehensive performance evaluation workflows for large organizations with detailed reporting and analytics.",
+      "image": "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "features": ["Performance tracking", "Assessment workflows", "Analytics dashboard", "Role-based access"],
+      "github": "#",
+      "demo": "#"
+    },
+    {
+      "id": 3,
+      "name": "Campus Pro",
+      "category": "Education",
+      "stack": ["React.js", "Tailwind CSS", "MySQL"],
+      "summary": "Comprehensive audit system designed for nonprofit school operations, enabling efficient management of academic processes and administrative tasks.",
+      "image": "https://images.pexels.com/photos/1595391/pexels-photo-1595391.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "features": ["Academic auditing", "School management", "Compliance tracking", "Reporting system"],
+      "github": "#",
+      "demo": "#"
+    },
+    {
+      "id": 4,
+      "name": "Office Management System",
+      "category": "Business",
+      "stack": ["React.js", "Node.js", "MongoDB", "Tailwind CSS"],
+      "summary": "Centralized platform for employee records management, leave tracking, and attendance monitoring with automated workflows and notifications.",
+      "image": "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "features": ["Employee records", "Leave management", "Attendance tracking", "Automated workflows"],
+      "github": "#",
+      "demo": "#"
+    }
+  ]
+}

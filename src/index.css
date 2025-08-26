@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+  }
+  
+  p {
+    line-height: 1.5;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply bg-gray-900/10 backdrop-blur-md border border-gray-700/20;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95 touch-manipulation;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95 touch-manipulation;
+  }
+  
+  /* Mobile-optimized button styles */
+  @media (max-width: 640px) {
+    .btn-primary,
+    .btn-secondary {
+      @apply hover:scale-100 active:scale-95 min-h-[44px] text-center;
+    }
+  }
+  
+  /* Touch-friendly interactive elements */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Improved mobile tap targets */
+  @media (max-width: 768px) {
+    button,
+    a[role="button"],
+    .clickable {
+      @apply min-h-[44px] touch-manipulation;
+    }
+  }
+  
+  /* Mobile-specific animations */
+  @media (max-width: 768px) {
+    .mobile-optimized {
+      @apply transform-gpu;
+    }
+    
+    /* Reduce motion intensity on mobile */
+    .hover-lift {
+      @apply hover:translate-y-0 hover:scale-100;
+    }
+  }
+  
+  /* Improved mobile menu styles */
+  .mobile-menu-backdrop {
+    @apply fixed inset-0 bg-black/20 backdrop-blur-sm z-40;
+  }
+  
+  .mobile-menu-content {
+    @apply bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border border-gray-200/20 dark:border-gray-700/20 shadow-xl rounded-b-2xl;
+  }
+}
+
+@layer utilities {
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+  
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-600;
+}
+
+/* Mobile Safari fixes */
+@supports (-webkit-touch-callout: none) {
+  .ios-fix {
+    @apply transform-gpu;
+  }
+  
+  /* Fix for iOS Safari viewport height issues */
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Prevent horizontal scroll on mobile */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Improve mobile performance */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Better mobile focus states */
+@media (max-width: 768px) {
+  button:focus,
+  a:focus,
+  input:focus,
+  textarea:focus {
+    @apply outline-2 outline-primary-500 outline-offset-2;
+  }
+}
+/* Skip to content link */
+.skip-link {
+  @apply absolute -top-10 left-4 bg-primary-600 text-white px-4 py-2 rounded-md transform transition-transform duration-200 z-50;
+}
+
+.skip-link:focus {
+  @apply top-4;
+}
+
+/* Focus styles */
+.focus-visible {
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-900;
+}
+
+/* Mobile-specific focus improvements */
+@media (max-width: 768px) {
+  .focus-visible {
+    @apply ring-offset-1;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable transforms that might cause motion sickness */
+  .motion-reduce-friendly {
+    @apply transform-none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .glass,
+  .glass-dark {
+    @apply bg-white dark:bg-gray-900 border-2 border-gray-900 dark:border-white;
+  }
+}
+
+/* Mobile landscape optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-mobile-landscape {
+    @apply py-8;
+  }
+  
+  .mobile-menu-content {
+    @apply max-h-[80vh] overflow-y-auto;
+  }
+}
