@@ -7,6 +7,7 @@ const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [isMobile, setIsMobile] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   const navigation = [
@@ -19,6 +20,12 @@ const Navbar: React.FC = () => {
   ];
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
       
@@ -48,6 +55,7 @@ const Navbar: React.FC = () => {
       if (window.innerWidth >= 768) {
         setIsMobileMenuOpen(false);
       }
+      checkMobile();
     };
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleResize);
@@ -105,8 +113,8 @@ const Navbar: React.FC = () => {
                 <motion.button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={!isMobile ? { scale: 1.05 } : {}}
+                  whileTap={{ scale: 0.98 }}
                   className={`relative px-2 lg:px-3 py-2 text-sm font-medium transition-colors duration-200 ${
                     activeSection === item.href.slice(1)
                       ? 'text-primary-600 dark:text-primary-400'
@@ -128,43 +136,43 @@ const Navbar: React.FC = () => {
             {/* Theme Toggle & Mobile Menu Button */}
             <div className="flex items-center space-x-4">
               <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={!isMobile ? { scale: 1.1 } : {}}
+                whileTap={{ scale: 0.95 }}
                 onClick={toggleTheme}
-                className="p-1.5 sm:p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 z-50 relative"
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 z-50 relative min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Toggle theme"
               >
-                {theme === 'light' ? <Moon size={18} className="sm:w-5 sm:h-5" /> : <Sun size={18} className="sm:w-5 sm:h-5" />}
+                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
               </motion.button>
 
               <div className="md:hidden">
                 <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={!isMobile ? { scale: 1.1 } : {}}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleMobileMenuToggle}
-                  className="p-1.5 sm:p-2 rounded-lg text-gray-700 dark:text-gray-300 z-50 relative"
+                  className="p-2 rounded-lg text-gray-700 dark:text-gray-300 z-50 relative min-h-[44px] min-w-[44px] flex items-center justify-center"
                   aria-label="Toggle mobile menu"
                 >
                   <AnimatePresence mode="wait">
                     {isMobileMenuOpen ? (
                       <motion.div
                         key="close"
-                        initial={{ rotate: -90, opacity: 0 }}
+                        initial={{ rotate: isMobile ? 0 : -90, opacity: 0 }}
                         animate={{ rotate: 0, opacity: 1 }}
-                        exit={{ rotate: 90, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        exit={{ rotate: isMobile ? 0 : 90, opacity: 0 }}
+                        transition={{ duration: isMobile ? 0.1 : 0.2 }}
                       >
-                        <X size={20} className="sm:w-6 sm:h-6" />
+                        <X size={24} />
                       </motion.div>
                     ) : (
                       <motion.div
                         key="menu"
-                        initial={{ rotate: 90, opacity: 0 }}
+                        initial={{ rotate: isMobile ? 0 : 90, opacity: 0 }}
                         animate={{ rotate: 0, opacity: 1 }}
-                        exit={{ rotate: -90, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        exit={{ rotate: isMobile ? 0 : -90, opacity: 0 }}
+                        transition={{ duration: isMobile ? 0.1 : 0.2 }}
                       >
-                        <Menu size={20} className="sm:w-6 sm:h-6" />
+                        <Menu size={24} />
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -183,32 +191,32 @@ const Navbar: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: isMobile ? 0.15 : 0.2 }}
                 className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               
               {/* Mobile Menu Content */}
             <motion.div
-                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                initial={{ opacity: 0, y: isMobile ? -10 : -20, scale: isMobile ? 1 : 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                exit={{ opacity: 0, y: isMobile ? -10 : -20, scale: isMobile ? 1 : 0.95 }}
+                transition={{ duration: isMobile ? 0.2 : 0.3, ease: "easeOut" }}
                 className="absolute top-full left-0 right-0 md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200/20 dark:border-gray-700/20 shadow-lg z-50"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="container mx-auto px-4 sm:px-6 py-6 space-y-1">
+                <div className="container mx-auto px-6 py-6 space-y-2">
                 {navigation.map((item, index) => (
                   <motion.button
                     key={item.name}
-                      initial={{ opacity: 0, x: -30 }}
+                      initial={{ opacity: 0, x: isMobile ? -10 : -30 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 + 0.1, duration: 0.3 }}
+                      transition={{ delay: isMobile ? index * 0.02 + 0.05 : index * 0.05 + 0.1, duration: isMobile ? 0.2 : 0.3 }}
                     onClick={() => handleNavClick(item.href)}
-                      className={`block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
+                      className={`block w-full text-left px-6 py-4 rounded-lg text-lg font-medium transition-all duration-200 min-h-[48px] flex items-center ${
                       activeSection === item.href.slice(1)
-                          ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 transform translate-x-2'
-                          : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:transform hover:translate-x-2'
+                          ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                          : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
                     }`}
                   >
                     {item.name}

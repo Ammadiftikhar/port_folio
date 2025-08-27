@@ -5,14 +5,29 @@ import { Code2, Palette, Zap, Users } from 'lucide-react';
 import siteData from '../data/siteData.json';
 
 const About: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold: 0.3,
     freezeOnceVisible: true
   });
 
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const textVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: {
+    visible: isMobile ? {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.3, ease: "easeOut" }
+    } : {
       opacity: 1,
       y: 0,
       transition: { duration: 0.6, ease: "easeOut" }
@@ -21,7 +36,16 @@ const About: React.FC = () => {
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: (i: number) => ({
+    visible: (i: number) => isMobile ? {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        delay: i * 0.05 + 0.1,
+        duration: 0.3,
+        ease: "easeOut"
+      }
+    } : ({
       opacity: 1,
       y: 0,
       scale: 1,
@@ -161,12 +185,12 @@ const About: React.FC = () => {
                 custom={index}
                 initial="hidden"
                 animate={isIntersecting ? "visible" : "hidden"}
-                whileHover={{ y: -5, scale: 1.02 }}
+                whileHover={!isMobile ? { y: -5, scale: 1.02 } : {}}
                 className="glass dark:glass-dark rounded-xl p-4 sm:p-6 text-center group cursor-pointer mobile-optimized"
               >
                 <motion.div
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
+                  whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
+                  transition={{ duration: isMobile ? 0.2 : 0.6 }}
                   className="inline-flex items-center justify-center w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg text-white mb-3 sm:mb-4 mx-auto"
                 >
                   <item.icon size={20} className="sm:w-6 sm:h-6" />

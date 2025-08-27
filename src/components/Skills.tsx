@@ -51,14 +51,29 @@ const SkillBar: React.FC<SkillBarProps> = ({ skill, index, isVisible }) => {
 };
 
 const Skills: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold: 0.2,
     freezeOnceVisible: true
   });
 
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const textVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: {
+    visible: isMobile ? {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.3, ease: "easeOut" }
+    } : {
       opacity: 1,
       y: 0,
       transition: { duration: 0.6, ease: "easeOut" }
@@ -67,7 +82,16 @@ const Skills: React.FC = () => {
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: (i: number) => ({
+    visible: (i: number) => isMobile ? {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        delay: i * 0.05,
+        duration: 0.3,
+        ease: "easeOut"
+      }
+    } : ({
       opacity: 1,
       y: 0,
       scale: 1,
@@ -112,7 +136,7 @@ const Skills: React.FC = () => {
                 custom={categoryIndex}
                 initial="hidden"
                 animate={isIntersecting ? "visible" : "hidden"}
-                whileHover={{ y: -5 }}
+                whileHover={!isMobile ? { y: -5 } : {}}
                 className="glass dark:glass-dark rounded-xl p-6 space-y-6"
               >
                 {/* Category Header */}

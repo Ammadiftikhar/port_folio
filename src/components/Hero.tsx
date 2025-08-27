@@ -6,11 +6,24 @@ import siteData from '../data/siteData.json';
 
 const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      const handleScroll = () => setScrollY(window.scrollY);
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
   }, []);
 
   const handleScrollToProjects = () => {
@@ -23,7 +36,15 @@ const Hero: React.FC = () => {
 
   const textVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => ({
+    visible: (i: number) => isMobile ? {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.3,
+        ease: "easeOut"
+      }
+    } : ({
       opacity: 1,
       y: 0,
       transition: {
@@ -36,7 +57,15 @@ const Hero: React.FC = () => {
 
   const buttonVariants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: {
+    visible: isMobile ? {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delay: 0.4,
+        duration: 0.3,
+        ease: "easeOut"
+      }
+    } : {
       opacity: 1,
       scale: 1,
       transition: {
@@ -56,13 +85,15 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 bg-noise opacity-30" />
       
       {/* Animated Background Gradient */}
-      <motion.div
-        style={{ y: scrollY * -0.5 }}
-        className="absolute inset-0 bg-gradient-radial from-primary-200/20 via-transparent to-accent-200/20 dark:from-primary-900/20 dark:via-transparent dark:to-accent-900/20"
-      />
+      {!isMobile && (
+        <motion.div
+          style={{ y: scrollY * -0.5 }}
+          className="absolute inset-0 bg-gradient-radial from-primary-200/20 via-transparent to-accent-200/20 dark:from-primary-900/20 dark:via-transparent dark:to-accent-900/20"
+        />
+      )}
 
       {/* Floating Shapes */}
-      <FloatingShapes />
+      {!isMobile && <FloatingShapes />}
 
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -116,34 +147,34 @@ const Hero: React.FC = () => {
             variants={buttonVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4 sm:px-0"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 sm:mb-12 px-4 sm:px-0"
           >
             <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
+              whileTap={{ scale: 0.98 }}
               onClick={handleScrollToProjects}
-              className="btn-primary w-full sm:w-auto text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3"
+              className="btn-primary w-full sm:w-auto text-base px-8 py-3 min-h-[48px]"
             >
               View Projects
             </motion.button>
 
             <motion.a
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
+              whileTap={{ scale: 0.98 }}
               href={siteData.contact.resume}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary w-full sm:w-auto flex items-center justify-center gap-2 text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3"
+              className="btn-secondary w-full sm:w-auto flex items-center justify-center gap-2 text-base px-8 py-3 min-h-[48px]"
             >
-              <Download size={18} className="sm:w-5 sm:h-5" />
+              <Download size={20} />
               Download Resume
             </motion.a>
 
             <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
+              whileTap={{ scale: 0.98 }}
               onClick={handleScrollToContact}
-              className="btn-secondary w-full sm:w-auto text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3"
+              className="btn-secondary w-full sm:w-auto text-base px-8 py-3 min-h-[48px]"
             >
               Contact Me
             </motion.button>
@@ -157,56 +188,58 @@ const Hero: React.FC = () => {
             className="flex justify-center space-x-4 sm:space-x-6 mb-12 sm:mb-16"
           >
             <motion.a
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={!isMobile ? { scale: 1.1, y: -2 } : {}}
+              whileTap={{ scale: 0.95 }}
               href={`mailto:${siteData.contact.email}`}
-              className="p-2.5 sm:p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+              className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 min-h-[48px] min-w-[48px] flex items-center justify-center"
               aria-label="Send email"
             >
-              <Mail size={20} className="sm:w-6 sm:h-6" />
+              <Mail size={24} />
             </motion.a>
 
             <motion.a
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={!isMobile ? { scale: 1.1, y: -2 } : {}}
+              whileTap={{ scale: 0.95 }}
               href={siteData.contact.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2.5 sm:p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+              className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 min-h-[48px] min-w-[48px] flex items-center justify-center"
               aria-label="GitHub profile"
             >
-              <Github size={20} className="sm:w-6 sm:h-6" />
+              <Github size={24} />
             </motion.a>
 
             <motion.a
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={!isMobile ? { scale: 1.1, y: -2 } : {}}
+              whileTap={{ scale: 0.95 }}
               href={siteData.contact.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2.5 sm:p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+              className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 min-h-[48px] min-w-[48px] flex items-center justify-center"
               aria-label="LinkedIn profile"
             >
-              <Linkedin size={20} className="sm:w-6 sm:h-6" />
+              <Linkedin size={24} />
             </motion.a>
           </motion.div>
         </div>
 
         {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2"
-        >
+        {!isMobile && (
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="p-2 rounded-full text-gray-400 dark:text-gray-500"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+            className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2"
           >
-            <ChevronDown size={28} className="sm:w-8 sm:h-8" />
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="p-2 rounded-full text-gray-400 dark:text-gray-500"
+            >
+              <ChevronDown size={32} />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
       </div>
     </section>
   );
