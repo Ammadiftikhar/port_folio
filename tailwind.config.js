@@ -63,6 +63,9 @@ export default {
           '50%': { transform: 'translateY(-20px)' },
         }
       },
+      scale: {
+        '98': '0.98',
+      },
       backdropBlur: {
         xs: '2px',
       }
