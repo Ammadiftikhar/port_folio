@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { Code2, Palette, Zap, Users } from 'lucide-react';
