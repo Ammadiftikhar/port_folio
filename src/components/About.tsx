@@ -1,90 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
-import { Code2, Palette, Zap, Users } from 'lucide-react';
-import siteData from '../data/siteData.json';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
+import { Code2, Palette, Zap, Users } from "lucide-react";
+import siteData from "../data/siteData.json";
 
 const About: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold: 0.3,
-    freezeOnceVisible: true
+    freezeOnceVisible: true,
   });
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const textVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: isMobile ? {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.3, ease: "easeOut" }
-    } : {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
+    visible: isMobile
+      ? {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.3, ease: "easeOut" },
+        }
+      : {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.6, ease: "easeOut" },
+        },
+  } as const;
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: (i: number) => isMobile ? {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        delay: i * 0.05 + 0.1,
-        duration: 0.3,
-        ease: "easeOut"
-      }
-    } : ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        delay: i * 0.1 + 0.3,
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    })
-  };
+    visible: (i: number) =>
+      isMobile
+        ? {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+              delay: i * 0.05 + 0.1,
+              duration: 0.3,
+              ease: "easeOut",
+            },
+          }
+        : {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+              delay: i * 0.1 + 0.3,
+              duration: 0.6,
+              ease: "easeOut",
+            },
+          },
+  } as const;
 
   const highlights = [
     {
       icon: Code2,
       title: "Clean Code",
-      description: "Writing maintainable, scalable, and well-documented code"
+      description: "Writing maintainable, scalable, and well-documented code",
     },
     {
       icon: Palette,
       title: "UI/UX Focus",
-      description: "Creating intuitive and visually appealing user interfaces"
+      description: "Creating intuitive and visually appealing user interfaces",
     },
     {
       icon: Zap,
       title: "Performance",
-      description: "Optimizing applications for speed and efficiency"
+      description: "Optimizing applications for speed and efficiency",
     },
     {
       icon: Users,
       title: "Collaboration",
-      description: "Working effectively with cross-functional teams"
-    }
-  ];
+      description: "Working effectively with cross-functional teams",
+    },
+  ] as const;
+
+  const sentences = (siteData?.summary ?? "")
+    .split(". ")
+    .map((s: string) => s.trim())
+    .filter(Boolean);
 
   return (
-    <section 
-      id="about" 
-      className="section-spacing bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"
+    <section
+      id="about"
       ref={ref}
+      className="section-spacing bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"
     >
       <div className="responsive-container">
         <div className="max-w-4xl mx-auto">
@@ -112,26 +119,27 @@ const About: React.FC = () => {
 
           {/* Main Content */}
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16">
-            {/* Text Content */}
+            {/* Text Column */}
             {isMobile ? (
               <div className="space-y-6">
                 <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                  {siteData.summary.split('. ').map((sentence, index) => (
+                  {sentences.map((sentence, index) => (
                     <p key={index} className="responsive-body">
-                      {sentence}{index < siteData.summary.split('. ').length - 1 ? '.' : ''}
+                      {sentence}
+                      {index < sentences.length - 1 ? "." : ""}
                     </p>
                   ))}
                 </div>
 
                 <div className="flex flex-col gap-3 pt-4">
                   <div className="flex items-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900/30 rounded-full">
-                    <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
+                    <div className="w-2 h-2 bg-primary-600 rounded-full" />
                     <span className="text-primary-700 dark:text-primary-300 font-medium responsive-small">
-                      Based in {siteData.contact.location}
+                      Based in {siteData?.contact?.location ?? "—"}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full">
-                    <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse" />
                     <span className="text-green-700 dark:text-green-300 font-medium responsive-small">
                       Available for work
                     </span>
@@ -146,7 +154,7 @@ const About: React.FC = () => {
                 className="space-y-6"
               >
                 <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                  {siteData.summary.split('. ').map((sentence, index) => (
+                  {sentences.map((sentence, index) => (
                     <motion.p
                       key={index}
                       variants={textVariants}
@@ -155,7 +163,8 @@ const About: React.FC = () => {
                       transition={{ delay: index * 0.1 + 0.2 }}
                       className="responsive-body"
                     >
-                      {sentence}{index < siteData.summary.split('. ').length - 1 ? '.' : ''}
+                      {sentence}
+                      {index < sentences.length - 1 ? "." : ""}
                     </motion.p>
                   ))}
                 </div>
@@ -168,13 +177,13 @@ const About: React.FC = () => {
                   className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-4"
                 >
                   <div className="flex items-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900/30 rounded-full">
-                    <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
+                    <div className="w-2 h-2 bg-primary-600 rounded-full" />
                     <span className="text-primary-700 dark:text-primary-300 font-medium responsive-small">
-                      Based in {siteData.contact.location}
+                      Based in {siteData?.contact?.location ?? "—"}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full">
-                    <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse" />
                     <span className="text-green-700 dark:text-green-300 font-medium responsive-small">
                       Available for work
                     </span>
@@ -182,43 +191,8 @@ const About: React.FC = () => {
                 </motion.div>
               </motion.div>
             )}
-                {siteData.summary.split('. ').map((sentence, index) => (
-                  <motion.p
-                    key={index}
-                    variants={textVariants}
-                    initial="hidden"
-                    animate={isIntersecting ? "visible" : "hidden"}
-                    transition={{ delay: index * 0.1 + 0.2 }}
-                    className="text-base sm:text-lg"
-                  >
-                    {sentence}{index < siteData.summary.split('. ').length - 1 ? '.' : ''}
-                  </motion.p>
-                ))}
-              </div>
 
-              <motion.div
-                variants={textVariants}
-                initial="hidden"
-                animate={isIntersecting ? "visible" : "hidden"}
-                transition={{ delay: 0.6 }}
-                className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-3 sm:pt-4"
-              >
-                <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-100 dark:bg-primary-900/30 rounded-full text-sm sm:text-base">
-                  <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
-                  <span className="text-primary-700 dark:text-primary-300 font-medium">
-                    Based in {siteData.contact.location}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full text-sm sm:text-base">
-                  <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
-                  <span className="text-green-700 dark:text-green-300 font-medium">
-                    Available for work
-                  </span>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Image/Visual Element */}
+            {/* Visual Column */}
             {isMobile ? (
               <div className="relative">
                 <div className="relative glass dark:glass-dark rounded-2xl p-8 h-80 flex items-center justify-center">
@@ -227,17 +201,17 @@ const About: React.FC = () => {
                       <span className="text-4xl font-bold text-white">A</span>
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      {siteData.name}
+                      {siteData?.name}
                     </h3>
                     <p className="responsive-small text-gray-600 dark:text-gray-300">
-                      {siteData.role}
+                      {siteData?.role}
                     </p>
                   </div>
-                  
+
                   {/* Decorative elements */}
-                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary-400 rounded-full opacity-60"></div>
-                  <div className="absolute bottom-4 left-4 w-4 h-4 bg-accent-400 rounded-full opacity-60"></div>
-                  <div className="absolute top-1/2 left-4 w-2 h-2 bg-primary-300 rounded-full opacity-40"></div>
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary-400 rounded-full opacity-60" />
+                  <div className="absolute bottom-4 left-4 w-4 h-4 bg-accent-400 rounded-full opacity-60" />
+                  <div className="absolute top-1/2 left-4 w-2 h-2 bg-primary-300 rounded-full opacity-40" />
                 </div>
               </div>
             ) : (
@@ -254,44 +228,25 @@ const About: React.FC = () => {
                       <span className="text-4xl font-bold text-white">A</span>
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      {siteData.name}
+                      {siteData?.name}
                     </h3>
                     <p className="responsive-small text-gray-600 dark:text-gray-300">
-                      {siteData.role}
+                      {siteData?.role}
                     </p>
                   </div>
-                  
+
                   {/* Decorative elements */}
-                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary-400 rounded-full opacity-60"></div>
-                  <div className="absolute bottom-4 left-4 w-4 h-4 bg-accent-400 rounded-full opacity-60"></div>
-                  <div className="absolute top-1/2 left-4 w-2 h-2 bg-primary-300 rounded-full opacity-40"></div>
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary-400 rounded-full opacity-60" />
+                  <div className="absolute bottom-4 left-4 w-4 h-4 bg-accent-400 rounded-full opacity-60" />
+                  <div className="absolute top-1/2 left-4 w-2 h-2 bg-primary-300 rounded-full opacity-40" />
                 </div>
               </motion.div>
             )}
           </div>
-                <div className="text-center">
-                  <div className="w-24 sm:w-32 h-24 sm:h-32 bg-gradient-to-br from-primary-600 to-accent-600 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center">
-                    <span className="text-2xl sm:text-4xl font-bold text-white">A</span>
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2">
-                    {siteData.name}
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
-                    {siteData.role}
-                  </p>
-                </div>
-                
-                {/* Decorative elements */}
-                <div className="absolute top-3 sm:top-4 right-3 sm:right-4 w-4 sm:w-6 h-4 sm:h-6 bg-primary-400 rounded-full opacity-60"></div>
-                <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 w-3 sm:w-4 h-3 sm:h-4 bg-accent-400 rounded-full opacity-60"></div>
-                <div className="absolute top-1/2 left-3 sm:left-4 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-primary-300 rounded-full opacity-40"></div>
-              </div>
-            </motion.div>
-          </div>
 
           {/* Highlights Grid */}
           <div className="mobile-grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {highlights.map((item, index) => (
+            {highlights.map((item, index) =>
               isMobile ? (
                 <div
                   key={item.title}
@@ -332,7 +287,7 @@ const About: React.FC = () => {
                   </p>
                 </motion.div>
               )
-            ))}
+            )}
           </div>
         </div>
       </div>
