@@ -107,8 +107,8 @@
   }
   
   .mobile-menu-content {
-    @apply bg-white/98 dark:bg-gray-900/98 border border-gray-200/20 dark:border-gray-700/20 shadow-2xl;
-  }
+  @apply bg-white/95 dark:bg-gray-900/95 border border-gray-200/20 dark:border-gray-700/20 shadow-2xl;
+}
   
   /* Improved mobile navigation */
   @media (max-width: 768px) {
