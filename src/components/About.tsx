@@ -83,34 +83,105 @@ const About: React.FC = () => {
   return (
     <section 
       id="about" 
-      className="py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"
+      className="section-spacing bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"
       ref={ref}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="responsive-container">
         <div className="max-w-4xl mx-auto">
           {/* Section Header */}
-          <motion.div
-            variants={textVariants}
-            initial="hidden"
-            animate={isIntersecting ? "visible" : "hidden"}
-            className="text-center mb-12 sm:mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
-              About <span className="text-gradient">Me</span>
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary-600 to-accent-600 mx-auto rounded-full" />
-          </motion.div>
-
-          {/* Main Content */}
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-12 sm:mb-16">
-            {/* Text Content */}
+          {isMobile ? (
+            <div className="text-center mb-12">
+              <h2 className="responsive-heading-1 text-gray-900 dark:text-white mb-6">
+                About <span className="text-gradient">Me</span>
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-primary-600 to-accent-600 mx-auto rounded-full" />
+            </div>
+          ) : (
             <motion.div
               variants={textVariants}
               initial="hidden"
               animate={isIntersecting ? "visible" : "hidden"}
-              className="space-y-4 sm:space-y-6"
+              className="text-center mb-16"
             >
-              <div className="space-y-3 sm:space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+              <h2 className="responsive-heading-1 text-gray-900 dark:text-white mb-6">
+                About <span className="text-gradient">Me</span>
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-primary-600 to-accent-600 mx-auto rounded-full" />
+            </motion.div>
+          )}
+
+          {/* Main Content */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16">
+            {/* Text Content */}
+            {isMobile ? (
+              <div className="space-y-6">
+                <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {siteData.summary.split('. ').map((sentence, index) => (
+                    <p key={index} className="responsive-body">
+                      {sentence}{index < siteData.summary.split('. ').length - 1 ? '.' : ''}
+                    </p>
+                  ))}
+                </div>
+
+                <div className="flex flex-col gap-3 pt-4">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+                    <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
+                    <span className="text-primary-700 dark:text-primary-300 font-medium responsive-small">
+                      Based in {siteData.contact.location}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full">
+                    <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+                    <span className="text-green-700 dark:text-green-300 font-medium responsive-small">
+                      Available for work
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <motion.div
+                variants={textVariants}
+                initial="hidden"
+                animate={isIntersecting ? "visible" : "hidden"}
+                className="space-y-6"
+              >
+                <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {siteData.summary.split('. ').map((sentence, index) => (
+                    <motion.p
+                      key={index}
+                      variants={textVariants}
+                      initial="hidden"
+                      animate={isIntersecting ? "visible" : "hidden"}
+                      transition={{ delay: index * 0.1 + 0.2 }}
+                      className="responsive-body"
+                    >
+                      {sentence}{index < siteData.summary.split('. ').length - 1 ? '.' : ''}
+                    </motion.p>
+                  ))}
+                </div>
+
+                <motion.div
+                  variants={textVariants}
+                  initial="hidden"
+                  animate={isIntersecting ? "visible" : "hidden"}
+                  transition={{ delay: 0.6 }}
+                  className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-4"
+                >
+                  <div className="flex items-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+                    <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
+                    <span className="text-primary-700 dark:text-primary-300 font-medium responsive-small">
+                      Based in {siteData.contact.location}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full">
+                    <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+                    <span className="text-green-700 dark:text-green-300 font-medium responsive-small">
+                      Available for work
+                    </span>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
                 {siteData.summary.split('. ').map((sentence, index) => (
                   <motion.p
                     key={index}
@@ -148,14 +219,56 @@ const About: React.FC = () => {
             </motion.div>
 
             {/* Image/Visual Element */}
-            <motion.div
-              variants={textVariants}
-              initial="hidden"
-              animate={isIntersecting ? "visible" : "hidden"}
-              transition={{ delay: 0.4 }}
-              className="relative"
-            >
-              <div className="relative glass dark:glass-dark rounded-2xl p-6 sm:p-8 h-64 sm:h-80 flex items-center justify-center">
+            {isMobile ? (
+              <div className="relative">
+                <div className="relative glass dark:glass-dark rounded-2xl p-8 h-80 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-32 h-32 bg-gradient-to-br from-primary-600 to-accent-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+                      <span className="text-4xl font-bold text-white">A</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      {siteData.name}
+                    </h3>
+                    <p className="responsive-small text-gray-600 dark:text-gray-300">
+                      {siteData.role}
+                    </p>
+                  </div>
+                  
+                  {/* Decorative elements */}
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary-400 rounded-full opacity-60"></div>
+                  <div className="absolute bottom-4 left-4 w-4 h-4 bg-accent-400 rounded-full opacity-60"></div>
+                  <div className="absolute top-1/2 left-4 w-2 h-2 bg-primary-300 rounded-full opacity-40"></div>
+                </div>
+              </div>
+            ) : (
+              <motion.div
+                variants={textVariants}
+                initial="hidden"
+                animate={isIntersecting ? "visible" : "hidden"}
+                transition={{ delay: 0.4 }}
+                className="relative"
+              >
+                <div className="relative glass dark:glass-dark rounded-2xl p-8 h-80 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-32 h-32 bg-gradient-to-br from-primary-600 to-accent-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+                      <span className="text-4xl font-bold text-white">A</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      {siteData.name}
+                    </h3>
+                    <p className="responsive-small text-gray-600 dark:text-gray-300">
+                      {siteData.role}
+                    </p>
+                  </div>
+                  
+                  {/* Decorative elements */}
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary-400 rounded-full opacity-60"></div>
+                  <div className="absolute bottom-4 left-4 w-4 h-4 bg-accent-400 rounded-full opacity-60"></div>
+                  <div className="absolute top-1/2 left-4 w-2 h-2 bg-primary-300 rounded-full opacity-40"></div>
+                </div>
+              </motion.div>
+            )}
+          </div>
                 <div className="text-center">
                   <div className="w-24 sm:w-32 h-24 sm:h-32 bg-gradient-to-br from-primary-600 to-accent-600 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center">
                     <span className="text-2xl sm:text-4xl font-bold text-white">A</span>
@@ -177,31 +290,48 @@ const About: React.FC = () => {
           </div>
 
           {/* Highlights Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="mobile-grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {highlights.map((item, index) => (
-              <motion.div
-                key={item.title}
-                variants={cardVariants}
-                custom={index}
-                initial="hidden"
-                animate={isIntersecting ? "visible" : "hidden"}
-                whileHover={!isMobile ? { y: -5, scale: 1.02 } : {}}
-                className="glass dark:glass-dark rounded-xl p-4 sm:p-6 text-center group cursor-pointer mobile-optimized"
-              >
-                <motion.div
-                  whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
-                  transition={{ duration: isMobile ? 0.2 : 0.6 }}
-                  className="inline-flex items-center justify-center w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg text-white mb-3 sm:mb-4 mx-auto"
+              isMobile ? (
+                <div
+                  key={item.title}
+                  className="glass dark:glass-dark rounded-xl mobile-card text-center"
                 >
-                  <item.icon size={20} className="sm:w-6 sm:h-6" />
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg text-white mb-4 mx-auto">
+                    <item.icon size={20} />
+                  </div>
+                  <h3 className="responsive-heading-3 text-gray-900 dark:text-white mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="responsive-small text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              ) : (
+                <motion.div
+                  key={item.title}
+                  variants={cardVariants}
+                  custom={index}
+                  initial="hidden"
+                  animate={isIntersecting ? "visible" : "hidden"}
+                  whileHover={{ y: -5, scale: 1.02 }}
+                  className="glass dark:glass-dark rounded-xl p-6 text-center group cursor-pointer card-hover"
+                >
+                  <motion.div
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.6 }}
+                    className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg text-white mb-4 mx-auto"
+                  >
+                    <item.icon size={20} />
+                  </motion.div>
+                  <h3 className="responsive-heading-3 text-gray-900 dark:text-white mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="responsive-small text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {item.description}
+                  </p>
                 </motion.div>
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                  {item.description}
-                </p>
-              </motion.div>
+              )
             ))}
           </div>
         </div>

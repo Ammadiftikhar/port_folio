@@ -19,11 +19,9 @@ const Hero: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!isMobile) {
-      const handleScroll = () => setScrollY(window.scrollY);
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-    }
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleScrollToProjects = () => {
@@ -79,157 +77,243 @@ const Hero: React.FC = () => {
   return (
     <section 
       id="home" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-primary-50 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 pt-14 sm:pt-16"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-primary-50 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 pt-16 section-spacing"
     >
       {/* Background Elements */}
       <div className="absolute inset-0 bg-noise opacity-30" />
       
       {/* Animated Background Gradient */}
-      {!isMobile && (
+      <div className="hidden md:block">
         <motion.div
           style={{ y: scrollY * -0.5 }}
           className="absolute inset-0 bg-gradient-radial from-primary-200/20 via-transparent to-accent-200/20 dark:from-primary-900/20 dark:via-transparent dark:to-accent-900/20"
         />
-      )}
+      </div>
 
       {/* Floating Shapes */}
-      {!isMobile && <FloatingShapes />}
+      <div className="hidden md:block">
+        <FloatingShapes />
+      </div>
 
       {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 responsive-container text-center">
         <div className="max-w-4xl mx-auto">
           {/* Greeting */}
-          <motion.p
-            variants={textVariants}
-            custom={0}
-            initial="hidden"
-            animate="visible"
-            className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-3 sm:mb-4 font-medium"
-          >
-            Hello, I'm
-          </motion.p>
+          {isMobile ? (
+            <p className="responsive-body text-gray-600 dark:text-gray-400 mb-4 font-medium">
+              Hello, I'm
+            </p>
+          ) : (
+            <motion.p
+              variants={textVariants}
+              custom={0}
+              initial="hidden"
+              animate="visible"
+              className="responsive-body text-gray-600 dark:text-gray-400 mb-4 font-medium"
+            >
+              Hello, I'm
+            </motion.p>
+          )}
 
           {/* Name */}
-          <motion.h1
-            variants={textVariants}
-            custom={1}
-            initial="hidden"
-            animate="visible"
-            className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight"
-          >
-            <span className="text-gradient">{siteData.name}</span>
-          </motion.h1>
+          {isMobile ? (
+            <h1 className="responsive-heading-1 text-gray-900 dark:text-white mb-6 leading-tight">
+              <span className="text-gradient">{siteData.name}</span>
+            </h1>
+          ) : (
+            <motion.h1
+              variants={textVariants}
+              custom={1}
+              initial="hidden"
+              animate="visible"
+              className="responsive-heading-1 text-gray-900 dark:text-white mb-6 leading-tight"
+            >
+              <span className="text-gradient">{siteData.name}</span>
+            </motion.h1>
+          )}
 
           {/* Role */}
-          <motion.h2
-            variants={textVariants}
-            custom={2}
-            initial="hidden"
-            animate="visible"
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 leading-tight"
-          >
-            {siteData.role}
-          </motion.h2>
+          {isMobile ? (
+            <h2 className="responsive-heading-2 text-gray-700 dark:text-gray-300 mb-8 leading-tight">
+              {siteData.role}
+            </h2>
+          ) : (
+            <motion.h2
+              variants={textVariants}
+              custom={2}
+              initial="hidden"
+              animate="visible"
+              className="responsive-heading-2 text-gray-700 dark:text-gray-300 mb-8 leading-tight"
+            >
+              {siteData.role}
+            </motion.h2>
+          )}
 
           {/* Tagline */}
-          <motion.p
-            variants={textVariants}
-            custom={3}
-            initial="hidden"
-            animate="visible"
-            className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0"
-          >
-            {siteData.tagline}
-          </motion.p>
+          {isMobile ? (
+            <p className="responsive-body text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+              {siteData.tagline}
+            </p>
+          ) : (
+            <motion.p
+              variants={textVariants}
+              custom={3}
+              initial="hidden"
+              animate="visible"
+              className="responsive-body text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed"
+            >
+              {siteData.tagline}
+            </motion.p>
+          )}
 
           {/* Action Buttons */}
-          <motion.div
-            variants={buttonVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 sm:mb-12 px-4 sm:px-0"
-          >
-            <motion.button
-              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleScrollToProjects}
-              className="btn-primary w-full sm:w-auto text-base px-8 py-3 min-h-[48px]"
-            >
-              View Projects
-            </motion.button>
+          {isMobile ? (
+            <div className="flex flex-col gap-4 justify-center items-center mb-12">
+              <button
+                onClick={handleScrollToProjects}
+                className="btn-primary mobile-btn"
+              >
+                View Projects
+              </button>
 
-            <motion.a
-              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
-              whileTap={{ scale: 0.98 }}
-              href={siteData.contact.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary w-full sm:w-auto flex items-center justify-center gap-2 text-base px-8 py-3 min-h-[48px]"
-            >
-              <Download size={20} />
-              Download Resume
-            </motion.a>
+              <a
+                href={siteData.contact.resume}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary mobile-btn gap-2"
+              >
+                <Download size={20} />
+                Download Resume
+              </a>
 
-            <motion.button
-              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleScrollToContact}
-              className="btn-secondary w-full sm:w-auto text-base px-8 py-3 min-h-[48px]"
+              <button
+                onClick={handleScrollToContact}
+                className="btn-secondary mobile-btn"
+              >
+                Contact Me
+              </button>
+            </div>
+          ) : (
+            <motion.div
+              variants={buttonVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-row gap-4 justify-center items-center mb-12"
             >
-              Contact Me
-            </motion.button>
-          </motion.div>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleScrollToProjects}
+                className="btn-primary px-8 py-3"
+              >
+                View Projects
+              </motion.button>
+
+              <motion.a
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                href={siteData.contact.resume}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary flex items-center justify-center gap-2 px-8 py-3"
+              >
+                <Download size={20} />
+                Download Resume
+              </motion.a>
+
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleScrollToContact}
+                className="btn-secondary px-8 py-3"
+              >
+                Contact Me
+              </motion.button>
+            </motion.div>
+          )}
 
           {/* Social Links */}
-          <motion.div
-            variants={buttonVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex justify-center space-x-4 sm:space-x-6 mb-12 sm:mb-16"
-          >
-            <motion.a
-              whileHover={!isMobile ? { scale: 1.1, y: -2 } : {}}
-              whileTap={{ scale: 0.95 }}
-              href={`mailto:${siteData.contact.email}`}
-              className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 min-h-[48px] min-w-[48px] flex items-center justify-center"
-              aria-label="Send email"
-            >
-              <Mail size={24} />
-            </motion.a>
+          {isMobile ? (
+            <div className="flex justify-center space-x-6 mb-16">
+              <a
+                href={`mailto:${siteData.contact.email}`}
+                className="touch-target p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center justify-center"
+                aria-label="Send email"
+              >
+                <Mail size={24} />
+              </a>
 
-            <motion.a
-              whileHover={!isMobile ? { scale: 1.1, y: -2 } : {}}
-              whileTap={{ scale: 0.95 }}
-              href={siteData.contact.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 min-h-[48px] min-w-[48px] flex items-center justify-center"
-              aria-label="GitHub profile"
-            >
-              <Github size={24} />
-            </motion.a>
+              <a
+                href={siteData.contact.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="touch-target p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center justify-center"
+                aria-label="GitHub profile"
+              >
+                <Github size={24} />
+              </a>
 
-            <motion.a
-              whileHover={!isMobile ? { scale: 1.1, y: -2 } : {}}
-              whileTap={{ scale: 0.95 }}
-              href={siteData.contact.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 min-h-[48px] min-w-[48px] flex items-center justify-center"
-              aria-label="LinkedIn profile"
+              <a
+                href={siteData.contact.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="touch-target p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center justify-center"
+                aria-label="LinkedIn profile"
+              >
+                <Linkedin size={24} />
+              </a>
+            </div>
+          ) : (
+            <motion.div
+              variants={buttonVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex justify-center space-x-6 mb-16"
             >
-              <Linkedin size={24} />
-            </motion.a>
-          </motion.div>
+              <motion.a
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                href={`mailto:${siteData.contact.email}`}
+                className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 touch-target flex items-center justify-center"
+                aria-label="Send email"
+              >
+                <Mail size={24} />
+              </motion.a>
+
+              <motion.a
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                href={siteData.contact.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 touch-target flex items-center justify-center"
+                aria-label="GitHub profile"
+              >
+                <Github size={24} />
+              </motion.a>
+
+              <motion.a
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                href={siteData.contact.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 touch-target flex items-center justify-center"
+                aria-label="LinkedIn profile"
+              >
+                <Linkedin size={24} />
+              </motion.a>
+            </motion.div>
+          )}
         </div>
 
         {/* Scroll Indicator */}
-        {!isMobile && (
+        <div className="hidden md:block">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.6 }}
-            className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2"
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
@@ -239,7 +323,7 @@ const Hero: React.FC = () => {
               <ChevronDown size={32} />
             </motion.div>
           </motion.div>
-        )}
+        </div>
       </div>
     </section>
   );

@@ -91,31 +91,31 @@ const Navbar: React.FC = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`mobile-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled 
-            ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/20 dark:border-gray-700/20' 
+            ? 'bg-white/95 dark:bg-gray-900/95 md:bg-white/80 md:dark:bg-gray-900/80 md:backdrop-blur-md border-b border-gray-200/20 dark:border-gray-700/20' 
             : 'bg-transparent'
         }`}
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="responsive-container">
+          <div className="mobile-nav-container md:desktop-nav flex items-center justify-between">
             {/* Logo */}
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="font-bold text-lg sm:text-xl text-gray-900 dark:text-white z-50 relative"
+              whileHover={!isMobile ? { scale: 1.05 } : {}}
+              className="mobile-nav-logo md:text-xl text-gray-900 dark:text-white z-50 relative"
             >
               <span className="text-gradient">Ammad</span>
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+            <div className="hidden md:flex items-center space-x-8">
               {navigation.map((item) => (
                 <motion.button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
-                  whileHover={!isMobile ? { scale: 1.05 } : {}}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`relative px-2 lg:px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                  className={`desktop-nav-item relative px-3 py-2 text-sm font-medium ${
                     activeSection === item.href.slice(1)
                       ? 'text-primary-600 dark:text-primary-400'
                       : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
@@ -139,7 +139,7 @@ const Navbar: React.FC = () => {
                 whileHover={!isMobile ? { scale: 1.1 } : {}}
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleTheme}
-                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 z-50 relative min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="touch-target p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 z-50 relative flex items-center justify-center"
                 aria-label="Toggle theme"
               >
                 {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
@@ -150,7 +150,7 @@ const Navbar: React.FC = () => {
                   whileHover={!isMobile ? { scale: 1.1 } : {}}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleMobileMenuToggle}
-                  className="p-2 rounded-lg text-gray-700 dark:text-gray-300 z-50 relative min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="mobile-nav-toggle text-gray-700 dark:text-gray-300 z-50 relative"
                   aria-label="Toggle mobile menu"
                 >
                   <AnimatePresence mode="wait">
@@ -191,39 +191,36 @@ const Navbar: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: isMobile ? 0.15 : 0.2 }}
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+                transition={{ duration: 0.2 }}
+                className="mobile-menu-backdrop md:hidden"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               
               {/* Mobile Menu Content */}
-            <motion.div
-                initial={{ opacity: 0, y: isMobile ? -10 : -20, scale: isMobile ? 1 : 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: isMobile ? -10 : -20, scale: isMobile ? 1 : 0.95 }}
-                transition={{ duration: isMobile ? 0.2 : 0.3, ease: "easeOut" }}
-                className="absolute top-full left-0 right-0 md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200/20 dark:border-gray-700/20 shadow-lg z-50"
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="absolute top-full left-0 right-0 md:hidden mobile-menu-content shadow-2xl z-50"
                 onClick={(e) => e.stopPropagation()}
-            >
-                <div className="container mx-auto px-6 py-6 space-y-2">
-                {navigation.map((item, index) => (
-                  <motion.button
-                    key={item.name}
-                      initial={{ opacity: 0, x: isMobile ? -10 : -30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: isMobile ? index * 0.02 + 0.05 : index * 0.05 + 0.1, duration: isMobile ? 0.2 : 0.3 }}
-                    onClick={() => handleNavClick(item.href)}
-                      className={`block w-full text-left px-6 py-4 rounded-lg text-lg font-medium transition-all duration-200 min-h-[48px] flex items-center ${
-                      activeSection === item.href.slice(1)
+              >
+                <div className="responsive-container py-6 space-y-2">
+                  {navigation.map((item, index) => (
+                    <button
+                      key={item.name}
+                      onClick={() => handleNavClick(item.href)}
+                      className={`mobile-nav-item ${
+                        activeSection === item.href.slice(1)
                           ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
                           : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-                    }`}
-                  >
-                    {item.name}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
+                      }`}
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
             </>
           )}
         </AnimatePresence>
