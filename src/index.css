@@ -470,8 +470,9 @@ input, textarea {
   
   /* Enhanced hover states */
   .enhanced-hover {
-    @apply transition-all duration-300 ease-out hover:shadow-2xl hover:-translate-y-3 hover:scale-102;
-  }
+  @apply transition-transform duration-300 ease-out
+         hover:shadow-2xl hover:-translate-y-3 hover:scale-105;
+}
   
   /* Desktop typography enhancements */
   .desktop-heading {
