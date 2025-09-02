@@ -492,7 +492,7 @@ input, textarea {
   
   /* Moderate animations for tablets */
   .tablet-animate {
-    @apply transition-all duration-250 ease-out;
+    @apply transition-all duration-300 ease-out;
   }
 }
 
