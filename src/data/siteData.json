@@ -8,29 +8,37 @@
     "email": "ammadiftikhar07@gmail.com",
     "location": "Pakistan",
     "github": "https://github.com/ammadiftikhar",
-    "linkedin": "https://linkedin.com/in/ammadiftikhar",
+    "linkedin": "https://www.linkedin.com/in/ammad-iftikhar-132195282/",
     "resume": "/resume.pdf"
   },
   "skills": {
     "Web Technologies": [
-      { "name": "HTML", "level": 9 },
+      { "name": "HTML", "level": 10 },
       { "name": "CSS", "level": 9 },
-      { "name": "JavaScript", "level": 9 },
-      { "name": "React.js", "level": 9 }
+      { "name": "JavaScript", "level": 8 },
+      { "name": "TypeScript", "level": 7 },
+      { "name": "React.js", "level": 9 },
+      { "name": "Remix.js", "level": 7 }
+    
     ],
     "Styling & UI": [
       { "name": "Tailwind CSS", "level": 9 },
       { "name": "Bootstrap 5", "level": 8 },
-      { "name": "Styled Components", "level": 7 }
+      { "name": "Styled Components", "level": 7 },
+      { "name": "Framer Motion", "level": 6 },
+      { "name": "CSS Modules", "level": 8 }
     ],
     "State Management": [
       { "name": "Redux Toolkit", "level": 8 },
-      { "name": "Context API", "level": 7 }
+      { "name": "Context API", "level": 7 },
+      { "name": "RTK Query", "level": 9 }
     ],
     "Tools": [
       { "name": "Git/GitHub", "level": 9 },
       { "name": "Figma", "level": 8 },
-      { "name": "VS Code", "level": 9 }
+      { "name": "VS Code", "level": 9 },
+      { "name": "Postman", "level": 9 },
+      { "name": "Docker", "level": 6 }
     ]
   },
   "experience": [
@@ -47,7 +55,7 @@
     {
       "company": "Nexgen Solution",
       "title": "Internee",
-      "period": "Jun 2022 – Sep 2022",
+      "period": "Jun 2023 – Sep 2023",
       "highlights": [
         "Built optimized React components for dynamic, responsive applications",
         "Improved interactivity and UX through data-driven design decisions",
@@ -60,31 +68,31 @@
       "id": 1,
       "name": "AI Attorney",
       "category": "Web Application",
-      "stack": ["Remix.js", "Tailwind CSS", "PostgreSQL"],
-      "summary": "Built landing, draft, and library screens for an AI-powered legal platform that helps lawyers streamline their workflow and access legal resources efficiently.",
-      "image": "https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "stack": ["Remix js", "Tailwind CSS", "MySQL"],
+      "summary": "Built landing, draft, and library  for an AI-powered legal platform that helps lawyers streamline their workflow and access legal resources efficiently.",
+      "image": "/projects/aiAttorney-home.jpg",
       "features": ["AI-powered legal research", "Document drafting", "Legal library management", "Responsive design"],
       "github": "#",
-      "demo": "#"
+      "demo": "https://aiattorney.com.pk/"
     },
     {
       "id": 2,
-      "name": "Metro Pakistan Assessment",
+      "name": "Metro Pakistan ",
       "category": "Enterprise",
-      "stack": ["React.js", "Tailwind CSS", "NestJS", "PostgreSQL"],
+      "stack": ["React js", "Tailwind CSS", "Node JS", "MySQL"],
       "summary": "Employee assessment application enabling comprehensive performance evaluation workflows for large organizations with detailed reporting and analytics.",
-      "image": "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "image": "/projects/Metro pak.jpg",
       "features": ["Performance tracking", "Assessment workflows", "Analytics dashboard", "Role-based access"],
       "github": "#",
-      "demo": "#"
+      "demo": "https://dev.1ilafd0w.a2hosted.com/"
     },
     {
       "id": 3,
       "name": "Campus Pro",
       "category": "Education",
-      "stack": ["React.js", "Tailwind CSS", "MySQL"],
+      "stack": ["React.js", "Tailwind CSS", "MySQL","Node JS"],
       "summary": "Comprehensive audit system designed for nonprofit school operations, enabling efficient management of academic processes and administrative tasks.",
-      "image": "https://images.pexels.com/photos/1595391/pexels-photo-1595391.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "image": "/projects/Frame Campus Pro 1.jpg",
       "features": ["Academic auditing", "School management", "Compliance tracking", "Reporting system"],
       "github": "#",
       "demo": "#"
@@ -95,10 +103,31 @@
       "category": "Business",
       "stack": ["React.js", "Node.js", "MongoDB", "Tailwind CSS"],
       "summary": "Centralized platform for employee records management, leave tracking, and attendance monitoring with automated workflows and notifications.",
-      "image": "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "image": "/projects/office.png",
       "features": ["Employee records", "Leave management", "Attendance tracking", "Automated workflows"],
       "github": "#",
       "demo": "#"
-    }
+    },
+    {
+  "id": 5,
+  "name": "Event Visita",
+  "category": "Event Booking Platform",
+  "stack": ["React.js", "Laravel", "MongoDB", "Tailwind CSS"],
+  "summary": "A full-stack event booking website where users can browse company profiles, book events, and manage their bookings. Admins use a dashboard to approve events, add new events, and curate an image/gallery section. Includes a polished landing page.",
+  "image": "/projects/Screenshot 2025-08-22 152736.png",
+  "features": [
+    "User event booking & booking history",
+    "Company profile browsing",
+    "Admin dashboard for event approvals",
+    "Create, edit & publish new events",
+    "Image/gallery management",
+    "Responsive landing page",
+    "Role-based authentication (User/Admin)",
+    "Email/SMS notifications (optional)"
+  ],
+  "github": "#",
+  "demo": "#"
+}
+
   ]
 }

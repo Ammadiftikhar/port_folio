@@ -1,7 +1,7 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, ArrowUp, Heart } from 'lucide-react';
-import siteData from '../data/siteData.json';
+import React from "react";
+import { motion } from "framer-motion";
+import { Github, Linkedin, Mail, ArrowUp, Heart } from "lucide-react";
+import siteData from "../data/siteData.json";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -9,40 +9,40 @@ const Footer: React.FC = () => {
   const socialLinks = [
     {
       icon: Github,
-      label: 'GitHub',
+      label: "GitHub",
       href: siteData.contact.github,
-      color: 'hover:text-gray-900 dark:hover:text-white'
+      color: "hover:text-gray-900 dark:hover:text-white"
     },
     {
       icon: Linkedin,
-      label: 'LinkedIn', 
+      label: "LinkedIn",
       href: siteData.contact.linkedin,
-      color: 'hover:text-blue-600 dark:hover:text-blue-400'
+      color: "hover:text-blue-600 dark:hover:text-blue-400"
     },
     {
       icon: Mail,
-      label: 'Email',
+      label: "Email",
       href: `mailto:${siteData.contact.email}`,
-      color: 'hover:text-purple-600 dark:hover:text-purple-400'
+      color: "hover:text-purple-600 dark:hover:text-purple-400"
     }
   ];
 
   const quickLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
+    { name: "Home", href: "#home" },
+    { name: "About", href: "#about" },
+    { name: "Skills", href: "#skills" },
+    { name: "Experience", href: "#experience" },
+    { name: "Projects", href: "#projects" },
+    { name: "Contact", href: "#contact" }
   ];
 
   const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleNavClick = (href: string) => {
     const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    element?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -68,8 +68,8 @@ const Footer: React.FC = () => {
                   <span className="text-gradient">{siteData.name}</span>
                 </h3>
                 <p className="text-gray-300 leading-relaxed max-w-md">
-                  {siteData.role} passionate about creating exceptional web experiences. 
-                  Let's build something amazing together.
+                  {siteData.role} passionate about creating exceptional web experiences. Let's build something amazing
+                  together.
                 </p>
               </motion.div>
 
@@ -142,9 +142,7 @@ const Footer: React.FC = () => {
                 >
                   {siteData.contact.phone}
                 </a>
-                <p className="text-gray-400">
-                  {siteData.contact.location}
-                </p>
+                <p className="text-gray-400">{siteData.contact.location}</p>
               </div>
 
               {/* Resume Link */}
@@ -172,17 +170,19 @@ const Footer: React.FC = () => {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-gray-400 text-sm flex items-center gap-1"
+            className="text-gray-400 text-sm flex flex-wrap items-center justify-center gap-2"
           >
-            © {currentYear} {siteData.name}. Made with 
-            <motion.span
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-              className="text-red-500 mx-1"
-            >
-              <Heart size={14} fill="currentColor" />
-            </motion.span>
-            and React.js
+            © {currentYear}
+            <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-accent-400">
+              {siteData.name}
+            </span>
+            <span className="hidden sm:inline">•</span>
+            <span className="flex items-center gap-2">
+              Built with
+              <span className="px-2 py-0.5 rounded-full bg-white/10 text-gray-200">React</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/10 text-gray-200">Remix</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/10 text-gray-200">Tailwind</span>
+            </span>
           </motion.p>
 
           {/* Back to Top Button */}
@@ -197,10 +197,7 @@ const Footer: React.FC = () => {
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200 text-sm"
           >
             Back to Top
-            <motion.div
-              animate={{ y: [0, -3, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            >
+            <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}>
               <ArrowUp size={16} />
             </motion.div>
           </motion.button>

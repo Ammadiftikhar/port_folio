@@ -4,12 +4,15 @@ import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import siteData from '../data/siteData.json';
 
 interface SkillBarProps {
-  skill: { name: string; level: number };
+  skill: { name: string; level: number | null };
   index: number;
   isVisible: boolean;
 }
 
 const SkillBar: React.FC<SkillBarProps> = ({ skill, index, isVisible }) => {
+
+  const safeLevel = Math.max(0, Math.min(10, Number(skill.level ?? 0)));
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -22,13 +25,13 @@ const SkillBar: React.FC<SkillBarProps> = ({ skill, index, isVisible }) => {
           {skill.name}
         </span>
         <span className="text-primary-600 dark:text-primary-400 font-semibold">
-          {skill.level}/10
+          {safeLevel}/10
         </span>
       </div>
       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
-          animate={isVisible ? { width: `${skill.level * 10}%` } : { width: 0 }}
+          animate={isVisible ? { width: `${safeLevel * 10}%` } : { width: 0 }}
           transition={{ delay: index * 0.1 + 0.3, duration: 1, ease: "easeOut" }}
           className="h-full bg-gradient-to-r from-primary-600 to-accent-600 rounded-full relative"
         >
@@ -53,9 +56,11 @@ const SkillBar: React.FC<SkillBarProps> = ({ skill, index, isVisible }) => {
 const Skills: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { ref, isIntersecting } = useIntersectionObserver({
-    threshold: 0.2,
+    threshold: 0.05,
+    rootMargin: "0px 0px -10% 0px",
     freezeOnceVisible: true
   });
+  const visible = isMobile || isIntersecting;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -115,7 +120,7 @@ const Skills: React.FC = () => {
           <motion.div
             variants={textVariants}
             initial="hidden"
-            animate={isIntersecting ? "visible" : "hidden"}
+            animate={visible ? "visible" : "hidden"}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
@@ -135,7 +140,7 @@ const Skills: React.FC = () => {
                 variants={cardVariants}
                 custom={categoryIndex}
                 initial="hidden"
-                animate={isIntersecting ? "visible" : "hidden"}
+                animate={visible ? "visible" : "hidden"}
                 whileHover={!isMobile ? { y: -5 } : {}}
                 className="glass dark:glass-dark rounded-xl p-6 space-y-6"
               >
@@ -154,7 +159,7 @@ const Skills: React.FC = () => {
                       key={skill.name}
                       skill={skill}
                       index={skillIndex}
-                      isVisible={isIntersecting}
+                      isVisible={visible}
                     />
                   ))}
                 </div>
@@ -166,7 +171,7 @@ const Skills: React.FC = () => {
           <motion.div
             variants={textVariants}
             initial="hidden"
-            animate={isIntersecting ? "visible" : "hidden"}
+            animate={visible ? "visible" : "hidden"}
             transition={{ delay: 0.8 }}
             className="mt-16 text-center"
           >

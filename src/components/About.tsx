@@ -3,12 +3,13 @@ import { motion } from "framer-motion";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import { Code2, Palette, Zap, Users } from "lucide-react";
 import siteData from "../data/siteData.json";
+import ammadUrl from "../../public/WhatsApp Image 2025-08-21 at 15.39.44_886ed721.jpg?url";
 
 const About: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold: 0.3,
-    freezeOnceVisible: true,
+    freezeOnceVisible: true
   });
 
   useEffect(() => {
@@ -24,13 +25,13 @@ const About: React.FC = () => {
       ? {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.3, ease: "easeOut" },
+          transition: { duration: 0.3, ease: "easeOut" }
         }
       : {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.6, ease: "easeOut" },
-        },
+          transition: { duration: 0.6, ease: "easeOut" }
+        }
   } as const;
 
   const cardVariants = {
@@ -44,8 +45,8 @@ const About: React.FC = () => {
             transition: {
               delay: i * 0.05 + 0.1,
               duration: 0.3,
-              ease: "easeOut",
-            },
+              ease: "easeOut"
+            }
           }
         : {
             opacity: 1,
@@ -54,32 +55,32 @@ const About: React.FC = () => {
             transition: {
               delay: i * 0.1 + 0.3,
               duration: 0.6,
-              ease: "easeOut",
-            },
-          },
+              ease: "easeOut"
+            }
+          }
   } as const;
 
   const highlights = [
     {
       icon: Code2,
       title: "Clean Code",
-      description: "Writing maintainable, scalable, and well-documented code",
+      description: "Writing maintainable, scalable, and well-documented code"
     },
     {
       icon: Palette,
       title: "UI/UX Focus",
-      description: "Creating intuitive and visually appealing user interfaces",
+      description: "Creating intuitive and visually appealing user interfaces"
     },
     {
       icon: Zap,
       title: "Performance",
-      description: "Optimizing applications for speed and efficiency",
+      description: "Optimizing applications for speed and efficiency"
     },
     {
       icon: Users,
       title: "Collaboration",
-      description: "Working effectively with cross-functional teams",
-    },
+      description: "Working effectively with cross-functional teams"
+    }
   ] as const;
 
   const sentences = (siteData?.summary ?? "")
@@ -200,12 +201,8 @@ const About: React.FC = () => {
                     <div className="w-32 h-32 bg-gradient-to-br from-primary-600 to-accent-600 rounded-full mx-auto mb-6 flex items-center justify-center">
                       <span className="text-4xl font-bold text-white">A</span>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      {siteData?.name}
-                    </h3>
-                    <p className="responsive-small text-gray-600 dark:text-gray-300">
-                      {siteData?.role}
-                    </p>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{siteData?.name}</h3>
+                    <p className="responsive-small text-gray-600 dark:text-gray-300">{siteData?.role}</p>
                   </div>
 
                   {/* Decorative elements */}
@@ -225,14 +222,13 @@ const About: React.FC = () => {
                 <div className="relative glass dark:glass-dark rounded-2xl p-8 h-80 flex items-center justify-center">
                   <div className="text-center">
                     <div className="w-32 h-32 bg-gradient-to-br from-primary-600 to-accent-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-                      <span className="text-4xl font-bold text-white">A</span>
+                      {/* <span className="text-4xl font-bold text-white">A</span> */}
+                      <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+                        <img src={ammadUrl} alt="Profile" className="w-full h-full object-cover" />
+                      </div>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      {siteData?.name}
-                    </h3>
-                    <p className="responsive-small text-gray-600 dark:text-gray-300">
-                      {siteData?.role}
-                    </p>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{siteData?.name}</h3>
+                    <p className="responsive-small text-gray-600 dark:text-gray-300">{siteData?.role}</p>
                   </div>
 
                   {/* Decorative elements */}
@@ -248,16 +244,11 @@ const About: React.FC = () => {
           <div className="mobile-grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {highlights.map((item, index) =>
               isMobile ? (
-                <div
-                  key={item.title}
-                  className="glass dark:glass-dark rounded-xl mobile-card text-center"
-                >
+                <div key={item.title} className="glass dark:glass-dark rounded-xl mobile-card text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg text-white mb-4 mx-auto">
                     <item.icon size={20} />
                   </div>
-                  <h3 className="responsive-heading-3 text-gray-900 dark:text-white mb-2">
-                    {item.title}
-                  </h3>
+                  <h3 className="responsive-heading-3 text-gray-900 dark:text-white mb-2">{item.title}</h3>
                   <p className="responsive-small text-gray-600 dark:text-gray-300 leading-relaxed">
                     {item.description}
                   </p>
@@ -279,9 +270,7 @@ const About: React.FC = () => {
                   >
                     <item.icon size={20} />
                   </motion.div>
-                  <h3 className="responsive-heading-3 text-gray-900 dark:text-white mb-2">
-                    {item.title}
-                  </h3>
+                  <h3 className="responsive-heading-3 text-gray-900 dark:text-white mb-2">{item.title}</h3>
                   <p className="responsive-small text-gray-600 dark:text-gray-300 leading-relaxed">
                     {item.description}
                   </p>

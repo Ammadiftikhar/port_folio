@@ -97,7 +97,7 @@ const Hero: React.FC = () => {
 
       {/* Main Content */}
       <div className="relative z-10 responsive-container text-center">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto mt-5">
           {/* Greeting */}
           {isMobile ? (
             <p className="responsive-body text-gray-600 dark:text-gray-400 mb-4 font-medium">

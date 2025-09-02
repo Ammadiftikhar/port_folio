@@ -179,7 +179,7 @@ const Experience: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="btn-primary"
+                className="btn-primary inline-flex w-fit mx-auto justify-center items-center"
               >
                 Get In Touch
               </motion.button>
