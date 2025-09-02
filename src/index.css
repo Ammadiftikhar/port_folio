@@ -504,7 +504,7 @@ input, textarea {
   
   /* Full animation suite for large screens */
   .desktop-full-animate {
-    @apply transition-all duration-400 ease-out hover:shadow-2xl hover:-translate-y-4 hover:scale-110;
+    @apply transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-4 hover:scale-110;
   }
 }
 
