@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
-import { ExternalLink, Github, Filter } from 'lucide-react';
+import { ExternalLink, Github } from 'lucide-react';
 import ProjectModal from './ProjectModal';
 import siteData from '../data/siteData.json';
 
@@ -11,62 +11,43 @@ const Projects: React.FC = () => {
     freezeOnceVisible: true
   });
 
-  const [selectedProject, setSelectedProject] = useState<typeof siteData.projects[0] | null>(null);
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [selectedProject, setSelectedProject] =
+    useState<(typeof siteData.projects)[number] | null>(null);
+
+  // NEW: which project should show the “Nope—Private” sticker
+  const [stickerForId, setStickerForId] = useState<number | null>(null);
+  const stickerTimerRef = useRef<number | null>(null);
 
   const categories = ['All', ...Array.from(new Set(siteData.projects.map(p => p.category)))];
-  const filteredProjects = activeFilter === 'All' 
-    ? siteData.projects 
-    : siteData.projects.filter(p => p.category === activeFilter);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const filteredProjects =
+    activeFilter === 'All' ? siteData.projects : siteData.projects.filter(p => p.category === activeFilter);
 
-  const textVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
-
+  const textVariants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } } };
   const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    })
+    visible: (i: number) => ({ opacity: 1, y: 0, scale: 1, transition: { delay: i * 0.1, duration: 0.6, ease: 'easeOut' } })
   };
+  const filterVariants = { hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } } };
 
-  const filterVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.3 }
-    }
+  // Helper to flash the sticker for a moment
+  const flashSticker = (projectId: number) => {
+    setStickerForId(projectId);
+    if (stickerTimerRef.current) window.clearTimeout(stickerTimerRef.current);
+    stickerTimerRef.current = window.setTimeout(() => setStickerForId(null), 1600) as unknown as number;
   };
 
   return (
     <>
-      <section 
-        id="projects" 
+      <section
+        id="projects"
         className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900"
         ref={ref}
       >
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
-            <motion.div
-              variants={textVariants}
-              initial="hidden"
-              animate={isIntersecting ? "visible" : "hidden"}
-              className="text-center mb-16"
-            >
+            <motion.div variants={textVariants} initial="hidden" animate={isIntersecting ? 'visible' : 'hidden'} className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                 Featured <span className="text-gradient">Projects</span>
               </h2>
@@ -77,12 +58,7 @@ const Projects: React.FC = () => {
             </motion.div>
 
             {/* Filter Buttons */}
-            <motion.div
-              variants={textVariants}
-              initial="hidden"
-              animate={isIntersecting ? "visible" : "hidden"}
-              className="flex justify-center mb-12"
-            >
+            <motion.div variants={textVariants} initial="hidden" animate={isIntersecting ? 'visible' : 'hidden'} className="flex justify-center mb-12">
               <div className="flex flex-wrap justify-center gap-3 glass dark:glass-dark rounded-2xl p-2">
                 {categories.map((category) => (
                   <motion.button
@@ -104,10 +80,7 @@ const Projects: React.FC = () => {
             </motion.div>
 
             {/* Projects Grid */}
-            <motion.div 
-              layout
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
+            <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               <AnimatePresence mode="popLayout">
                 {filteredProjects.map((project, index) => (
                   <motion.div
@@ -119,7 +92,7 @@ const Projects: React.FC = () => {
                     animate="visible"
                     exit={{ opacity: 0, scale: 0.8 }}
                     whileHover={{ y: -5, scale: 1.02 }}
-                    className="glass dark:glass-dark rounded-xl overflow-hidden cursor-pointer group"
+                    className="glass dark:glass-dark rounded-xl overflow-hidden cursor-pointer group relative"
                     onClick={() => setSelectedProject(project)}
                   >
                     {/* Project Image */}
@@ -131,21 +104,25 @@ const Projects: React.FC = () => {
                         loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      
+
                       {/* Overlay Buttons */}
                       <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {/* GITHUB → show sticker */}
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(project.github, '_blank');
+                            e.preventDefault();   // block any default link behavior
+                            e.stopPropagation();  // don't open the modal/card
+                            flashSticker(project.id);
                           }}
                           className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-colors duration-200"
-                          aria-label="View source code"
+                          aria-label="Code is private"
                         >
                           <Github size={20} />
                         </motion.button>
+
+                        {/* Live demo unchanged */}
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -171,44 +148,62 @@ const Projects: React.FC = () => {
                           {project.category}
                         </span>
                       </div>
-
-                      <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
-                        {project.summary}
-                      </p>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">{project.summary}</p>
 
                       {/* Tech Stack */}
                       <div className="flex flex-wrap gap-2">
                         {project.stack.slice(0, 3).map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md"
-                          >
+                          <span key={tech} className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md">
                             {tech}
                           </span>
                         ))}
                         {project.stack.length > 3 && (
-                          <span className="px-2 py-1 text-xs text-primary-600 dark:text-primary-400 font-medium">
-                            +{project.stack.length - 3} more
-                          </span>
+                          <span className="px-2 py-1 text-xs text-primary-600 dark:text-primary-400 font-medium">+{project.stack.length - 3} more</span>
                         )}
                       </div>
                     </div>
+
+                    {/* FUN STICKER (per-card) */}
+                    <AnimatePresence>
+                      {stickerForId === project.id && (
+                        <motion.div
+                          key="nope-sticker"
+                          initial={{ opacity: 0, scale: 0.6, y: -10, rotate: -8 }}
+                          animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
+                          exit={{ opacity: 0, scale: 0.6, y: -10, rotate: 8 }}
+                          transition={{ type: 'spring', stiffness: 450, damping: 22, duration: 0.6 }}
+                          className="absolute top-3 right-3 z-20 select-none"
+                          aria-live="polite"
+                        >
+                          <div className="relative">
+                            <div className="flex items-center gap-2 rounded-2xl px-3 py-2 bg-white/90 dark:bg-gray-900/90 border border-gray-200 dark:border-gray-700 shadow-xl">
+                              {/* Waving/“No” hand */}
+                              <motion.span
+                                aria-hidden="true"
+                                animate={{ rotate: [0, -25, 25, -15, 15, 0] }}
+                                transition={{ duration: 0.9, times: [0, 0.2, 0.4, 0.6, 0.8, 1] }}
+                                className="text-2xl leading-none"
+                              >
+                                🙅‍♂️
+                              </motion.span>
+                              <span className="text-xs font-semibold text-gray-900 dark:text-white">
+                                Nope — Private Repo
+                              </span>
+                            </div>
+                            {/* small pointer */}
+                            <div className="absolute -bottom-1 right-6 w-3 h-3 bg-white/90 dark:bg-gray-900/90 rotate-45 border-r border-b border-gray-200 dark:border-gray-700" />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 ))}
               </AnimatePresence>
             </motion.div>
 
             {/* View More */}
-            <motion.div
-              variants={textVariants}
-              initial="hidden"
-              animate={isIntersecting ? "visible" : "hidden"}
-              transition={{ delay: 0.8 }}
-              className="text-center mt-16"
-            >
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Want to see more of my work?
-              </p>
+            <motion.div variants={textVariants} initial="hidden" animate={isIntersecting ? 'visible' : 'hidden'} transition={{ delay: 0.8 }} className="text-center mt-16">
+              <p className="text-gray-600 dark:text-gray-300 mb-6">Want to see more of my work?</p>
               <motion.a
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -226,11 +221,7 @@ const Projects: React.FC = () => {
       </section>
 
       {/* Project Modal */}
-      <ProjectModal
-        project={selectedProject}
-        isOpen={!!selectedProject}
-        onClose={() => setSelectedProject(null)}
-      />
+      <ProjectModal project={selectedProject} isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} />
     </>
   );
 };

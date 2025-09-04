@@ -37,8 +37,8 @@
       { "name": "Git/GitHub", "level": 9 },
       { "name": "Figma", "level": 8 },
       { "name": "VS Code", "level": 9 },
-      { "name": "Postman", "level": 9 },
-      { "name": "Docker", "level": 6 }
+      { "name": "Slack", "level": 9 },
+      { "name": "Postman", "level": 9 }
     ]
   },
   "experience": [
@@ -127,7 +127,66 @@
   ],
   "github": "#",
   "demo": "#"
+},
+{
+  "id": 6,
+  "name": "HavenCraft",
+  "category": "Interior Design",
+  "stack": ["React.js","Node JS", "PostgreSQL", "Tailwind CSS"],
+  "summary": "A modern, responsive home décor website showcasing living spaces, services, and blogs. Users can explore dining, bedroom, and kitchen designs with eco-friendly collections, while a sleek landing page highlights the brand’s style-first approach.",
+  "image": "/projects/decor.png",
+  "features": [
+    "Showcase of interior design collections",
+    "Service highlights with call-to-action buttons",
+    "Blog section for décor inspiration",
+    "Category pages (Dining, Bedroom, Kitchen, Style)",
+    "Responsive landing page with modern layouts",
+    "Elegant gallery presentation",
+    "Clean typography & brand-focused theme",
+    "Contact and social media integration"
+  ],
+  "github": "#",
+  "demo": "#"
+},
+{
+  "id": 7,
+  "name": "Decora Studio",
+  "category": "Interior Design",
+  "stack": ["React.js", "Node.js", "MongoDB", "Tailwind CSS"],
+  "summary": "A modern interior design and furniture e-commerce platform that blends aesthetics with usability. Users can browse premium collections, explore curated materials, and shop directly, while sections highlight quality, delivery, and support. The responsive landing page uses a polished olive-green theme to convey elegance and trust.",
+  "image": "/projects/decora-studio-ui.png",
+  "features": [
+    "Hero landing page with interior design theme",
+    "Product showcase with pricing and buy options",
+    "Why Choose Us section (Quality, Delivery, Return, Support)",
+    "Service highlights with call-to-actions",
+    "Blog and inspiration sections for interiors",
+    "Responsive UI with olive-green branding",
+    "Category-based browsing (Living, Dining, Bedroom)",
+    "Integrated shopping cart and contact system"
+  ],
+  "github": "#",
+  "demo": "#"
+},
+{
+  "id": 8,
+  "name": "WanderLocal",
+  "category": "Travel & Local Guide Platform",
+  "stack": ["React.js", "Node.js", "MySQL", "Tailwind CSS"],
+  "summary": "A modern travel platform that connects explorers with local guides for authentic experiences. Users can search destinations, filter by travel dates, and explore curated local insights, blogs, and client stories—all within a sleek, responsive interface.",
+  "image": "/projects/wanderlocal.png",
+  "features": [
+    "Search destinations with traveler and date filters",
+    "Discover cities through local guides",
+    "Blog and story section for inspiration",
+    "Client testimonials with ratings",
+    "Responsive landing page design",
+    "Category-based city browsing (Paris, Sydney, Tokyo)",
+    "Email newsletter subscription",
+    "Integrated contact and social media links"
+  ],
+  "github": "#",
+  "demo": "#"
 }
-
   ]
 }

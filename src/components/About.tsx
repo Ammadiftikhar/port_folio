@@ -199,7 +199,9 @@ const About: React.FC = () => {
                 <div className="relative glass dark:glass-dark rounded-2xl p-8 h-80 flex items-center justify-center">
                   <div className="text-center">
                     <div className="w-32 h-32 bg-gradient-to-br from-primary-600 to-accent-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-                      <span className="text-4xl font-bold text-white">A</span>
+                      <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+                        <img src={ammadUrl} alt="Profile" className="w-full h-full object-cover" />
+                      </div>
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{siteData?.name}</h3>
                     <p className="responsive-small text-gray-600 dark:text-gray-300">{siteData?.role}</p>
@@ -241,10 +243,10 @@ const About: React.FC = () => {
           </div>
 
           {/* Highlights Grid */}
-          <div className="mobile-grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {highlights.map((item, index) =>
               isMobile ? (
-                <div key={item.title} className="glass dark:glass-dark rounded-xl mobile-card text-center">
+                <div key={item.title} className="glass dark:glass-dark rounded-xl p-6 text-center h-full flex flex-col">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg text-white mb-4 mx-auto">
                     <item.icon size={20} />
                   </div>

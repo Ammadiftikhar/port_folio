@@ -15,9 +15,9 @@ function App() {
       <main id="main-content" className="overflow-x-hidden">
         <Hero />
         <About />
-        <Skills />
-        <Experience />
         <Projects />
+        <Experience />
+        <Skills />
         <Contact />
       </main>
       <Footer />
