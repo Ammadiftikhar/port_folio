@@ -187,6 +187,29 @@
   ],
   "github": "#",
   "demo": "#"
+},
+{
+  "id": 9,
+  "name": "ZeroKoin",
+  "category": "Crypto & Blockchain Platform",
+  "stack": ["React.js", "Node.js", "MySQL", "Tailwind CSS"],
+  "summary": "ZeroKoin is a next-generation crypto platform that combines tokenized learning, smart tools, and real-world rewards. It empowers users to start their journey from zero and grow with purpose through a secure, modern, and intuitive interface.",
+  "image": "/projects/Frame Campus pro.png",
+  "features": [
+    "Real-time ZeroKoin/USDT price tracking",
+    "Market cap and 24h performance stats",
+    "Buy ZeroKoin and download app directly",
+    "Comprehensive 'What is ZeroKoin?' section",
+    "Vision, mission, and key features highlights",
+    "Why We Exist cards with detailed explanations",
+    "Mobile app launching soon showcase",
+    "Roadmap to Tier 1 exchange listings",
+    "Official whitepaper download option",
+    "Responsive and futuristic landing page design"
+  ],
+  "github": "#",
+  "demo": "https://zerokoin.com/"
 }
+
   ]
 }
