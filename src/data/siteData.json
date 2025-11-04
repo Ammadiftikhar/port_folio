@@ -1,65 +1,79 @@
 {
   "name": "Ammad Iftikhar",
-  "role": "Front-End Developer",
-  "tagline": "I build dynamic, responsive, user-friendly web apps.",
-  "summary": "Passionate and detail-oriented Front-End Developer with expertise in React.js, JavaScript, and Tailwind CSS. I build dynamic, responsive, and user-friendly web applications with a focus on performance and clean UI/UX. My approach combines technical excellence with creative problem-solving to deliver exceptional user experiences.",
+  "role": "MERN Stack Developer",
+  "tagline": "I build scalable, full-stack web applications with modern tech.",
+  "summary": "Experienced MERN Stack Developer passionate about creating dynamic, responsive, and scalable web applications. I specialize in React.js, Node.js, Express, and MongoDB with expertise in building robust frontend interfaces and backend APIs. My approach combines technical excellence with creative problem-solving to deliver exceptional full-stack solutions.",
   "contact": {
     "phone": "+92-307-1074195",
     "email": "ammadiftikhar07@gmail.com",
-    "location": "Pakistan",
+    "location": "Islamabad, Pakistan",
     "github": "https://github.com/ammadiftikhar",
     "linkedin": "https://www.linkedin.com/in/ammad-iftikhar-132195282/",
     "resume": "/resume.pdf"
   },
   "skills": {
-    "Web Technologies": [
+    "Frontend": [
+      { "name": "React.js", "level": 9 },
+      { "name": "JavaScript", "level": 9 },
       { "name": "HTML", "level": 10 },
       { "name": "CSS", "level": 9 },
-      { "name": "JavaScript", "level": 8 },
-      { "name": "TypeScript", "level": 7 },
-      { "name": "React.js", "level": 9 },
-      { "name": "Remix.js", "level": 7 }
-    
+      { "name": "TypeScript", "level": 8 },
+      { "name": "Remix.js", "level": 8 }
+    ],
+    "Backend": [
+      { "name": "Node.js", "level": 9 },
+      { "name": "Express.js", "level": 9 },
+      { "name": "RESTful APIs", "level": 9 },
+      { "name": "GraphQL", "level": 7 }
+    ],
+    "Database": [
+      { "name": "MongoDB", "level": 9 },
+      { "name": "PostgreSQL", "level": 8 },
+      { "name": "MySQL", "level": 8 }
     ],
     "Styling & UI": [
       { "name": "Tailwind CSS", "level": 9 },
       { "name": "Bootstrap 5", "level": 8 },
-      { "name": "Styled Components", "level": 7 },
-      { "name": "Framer Motion", "level": 6 },
-      { "name": "CSS Modules", "level": 8 }
+      { "name": "Material UI", "level": 8 },
+      { "name": "Styled Components", "level": 7 }
     ],
     "State Management": [
       { "name": "Redux Toolkit", "level": 8 },
-      { "name": "Context API", "level": 7 },
+      { "name": "Context API", "level": 8 },
       { "name": "RTK Query", "level": 9 }
     ],
-    "Tools": [
+    "Tools & Other": [
       { "name": "Git/GitHub", "level": 9 },
+      { "name": "Postman", "level": 9 },
       { "name": "Figma", "level": 8 },
       { "name": "VS Code", "level": 9 },
-      { "name": "Slack", "level": 9 },
-      { "name": "Postman", "level": 9 }
+      { "name": "Stripe API", "level": 8 }
     ]
   },
   "experience": [
     {
       "company": "Firefly Tech Solutions",
       "title": "Software Engineer",
-      "period": "Feb 2024 – Present",
+      "location": "Islamabad, Pakistan",
+      "period": "Jan 2024 – Present",
       "highlights": [
-        "Developing new features and maintaining projects in ReactJS and CodeIgniter",
-        "Shipping scalable, high-performance UIs that serve thousands of users",
-        "Collaborating with cross-functional teams to deliver pixel-perfect designs"
+        "Developed full-stack MERN applications for non-profit organization managing schools across district",
+        "Built responsive frontend interfaces with React.js and robust backend APIs with Node.js/Express and MongoDB",
+        "Created and maintained admin dashboards for office management systems with real-time updates",
+        "Built online medical store system with product management, order handling, and Stripe payment integration",
+        "Shipped scalable, high-performance applications serving thousands of users"
       ]
     },
     {
       "company": "Nexgen Solution",
-      "title": "Internee",
-      "period": "Jun 2023 – Sep 2023",
+      "title": "Software Engineer",
+      "location": "Rahim Yar Khan, Pakistan",
+      "period": "Mar 2023 – Nov 2023",
       "highlights": [
-        "Built optimized React components for dynamic, responsive applications",
-        "Improved interactivity and UX through data-driven design decisions",
-        "Gained hands-on experience with modern frontend development practices"
+        "Developed and optimized React.js components for dynamic, responsive web applications",
+        "Applied data analysis and cleaning techniques to ensure accurate frontend data display",
+        "Managed Amazon drop-shipping platform with product listing optimization and order fulfillment",
+        "Improved user interactivity and overall user experience through data-driven design"
       ]
     }
   ],
@@ -68,21 +82,21 @@
       "id": 1,
       "name": "AI Attorney",
       "category": "Web Application",
-      "stack": ["Remix js", "Tailwind CSS", "MySQL"],
-      "summary": "Built landing, draft, and library  for an AI-powered legal platform that helps lawyers streamline their workflow and access legal resources efficiently.",
+      "stack": ["React.js", "Remix.js", "Tailwind CSS", "MySQL", "Node.js"],
+      "summary": "AI-powered legal services platform with landing page, draft screen, and library management. Built responsive frontend with Remix and integrated backend APIs for legal advice, document drafting, and client management.",
       "image": "/projects/aiAttorney-home.jpg",
-      "features": ["AI-powered legal research", "Document drafting", "Legal library management", "Responsive design"],
+      "features": ["AI-powered legal research", "Document drafting", "Legal library management", "Responsive design", "Remix framework"],
       "github": "#",
       "demo": "https://aiattorney.com.pk/"
     },
     {
       "id": 2,
-      "name": "Metro Pakistan ",
+      "name": "Metro Pakistan Assessment",
       "category": "Enterprise",
-      "stack": ["React js", "Tailwind CSS", "Node JS", "MySQL"],
-      "summary": "Employee assessment application enabling comprehensive performance evaluation workflows for large organizations with detailed reporting and analytics.",
+      "stack": ["React.js", "Node.js", "PostgreSQL", "Tailwind CSS"],
+      "summary": "Employee performance assessment system integrating React.js frontend with Node.js and PostgreSQL backend for automated evaluations and comprehensive reporting.",
       "image": "/projects/Metro pak.jpg",
-      "features": ["Performance tracking", "Assessment workflows", "Analytics dashboard", "Role-based access"],
+      "features": ["Performance tracking", "Assessment workflows", "Analytics dashboard", "Role-based access", "Automated reporting"],
       "github": "#",
       "demo": "https://dev.1ilafd0w.a2hosted.com/"
     },
@@ -90,10 +104,10 @@
       "id": 3,
       "name": "Campus Pro",
       "category": "Education",
-      "stack": ["React.js", "Tailwind CSS", "MySQL","Node JS"],
-      "summary": "Comprehensive audit system designed for nonprofit school operations, enabling efficient management of academic processes and administrative tasks.",
+      "stack": ["React.js", "Node.js", "MongoDB", "Tailwind CSS"],
+      "summary": "Comprehensive audit system for nonprofit school operations enabling efficient management of academic processes and administrative tasks with school audits.",
       "image": "/projects/Frame Campus Pro 1.jpg",
-      "features": ["Academic auditing", "School management", "Compliance tracking", "Reporting system"],
+      "features": ["Academic auditing", "School management", "Compliance tracking", "Reporting system", "Full-stack implementation"],
       "github": "#",
       "demo": "#"
     },
@@ -102,114 +116,22 @@
       "name": "Office Management System",
       "category": "Business",
       "stack": ["React.js", "Node.js", "MongoDB", "Tailwind CSS"],
-      "summary": "Centralized platform for employee records management, leave tracking, and attendance monitoring with automated workflows and notifications.",
+      "summary": "Centralized platform for employee records management, leave tracking, and attendance monitoring with automated workflows and real-time notifications.",
       "image": "/projects/office.png",
-      "features": ["Employee records", "Leave management", "Attendance tracking", "Automated workflows"],
+      "features": ["Employee records", "Leave management", "Attendance tracking", "Automated workflows", "Real-time updates"],
       "github": "#",
       "demo": "#"
     },
     {
-  "id": 5,
-  "name": "Event Visita",
-  "category": "Event Booking Platform",
-  "stack": ["React.js", "Laravel", "MongoDB", "Tailwind CSS"],
-  "summary": "A full-stack event booking website where users can browse company profiles, book events, and manage their bookings. Admins use a dashboard to approve events, add new events, and curate an image/gallery section. Includes a polished landing page.",
-  "image": "/projects/Screenshot 2025-08-22 152736.png",
-  "features": [
-    "User event booking & booking history",
-    "Company profile browsing",
-    "Admin dashboard for event approvals",
-    "Create, edit & publish new events",
-    "Image/gallery management",
-    "Responsive landing page",
-    "Role-based authentication (User/Admin)",
-    "Email/SMS notifications (optional)"
-  ],
-  "github": "#",
-  "demo": "#"
-},
-{
-  "id": 6,
-  "name": "HavenCraft",
-  "category": "Interior Design",
-  "stack": ["React.js","Node JS", "PostgreSQL", "Tailwind CSS"],
-  "summary": "A modern, responsive home décor website showcasing living spaces, services, and blogs. Users can explore dining, bedroom, and kitchen designs with eco-friendly collections, while a sleek landing page highlights the brand’s style-first approach.",
-  "image": "/projects/decor.png",
-  "features": [
-    "Showcase of interior design collections",
-    "Service highlights with call-to-action buttons",
-    "Blog section for décor inspiration",
-    "Category pages (Dining, Bedroom, Kitchen, Style)",
-    "Responsive landing page with modern layouts",
-    "Elegant gallery presentation",
-    "Clean typography & brand-focused theme",
-    "Contact and social media integration"
-  ],
-  "github": "#",
-  "demo": "#"
-},
-{
-  "id": 7,
-  "name": "Decora Studio",
-  "category": "Interior Design",
-  "stack": ["React.js", "Node.js", "MongoDB", "Tailwind CSS"],
-  "summary": "A modern interior design and furniture e-commerce platform that blends aesthetics with usability. Users can browse premium collections, explore curated materials, and shop directly, while sections highlight quality, delivery, and support. The responsive landing page uses a polished olive-green theme to convey elegance and trust.",
-  "image": "/projects/decora-studio-ui.png",
-  "features": [
-    "Hero landing page with interior design theme",
-    "Product showcase with pricing and buy options",
-    "Why Choose Us section (Quality, Delivery, Return, Support)",
-    "Service highlights with call-to-actions",
-    "Blog and inspiration sections for interiors",
-    "Responsive UI with olive-green branding",
-    "Category-based browsing (Living, Dining, Bedroom)",
-    "Integrated shopping cart and contact system"
-  ],
-  "github": "#",
-  "demo": "#"
-},
-{
-  "id": 8,
-  "name": "WanderLocal",
-  "category": "Travel & Local Guide Platform",
-  "stack": ["React.js", "Node.js", "MySQL", "Tailwind CSS"],
-  "summary": "A modern travel platform that connects explorers with local guides for authentic experiences. Users can search destinations, filter by travel dates, and explore curated local insights, blogs, and client stories—all within a sleek, responsive interface.",
-  "image": "/projects/wanderlocal.png",
-  "features": [
-    "Search destinations with traveler and date filters",
-    "Discover cities through local guides",
-    "Blog and story section for inspiration",
-    "Client testimonials with ratings",
-    "Responsive landing page design",
-    "Category-based city browsing (Paris, Sydney, Tokyo)",
-    "Email newsletter subscription",
-    "Integrated contact and social media links"
-  ],
-  "github": "#",
-  "demo": "#"
-},
-{
-  "id": 9,
-  "name": "ZeroKoin",
-  "category": "Crypto & Blockchain Platform",
-  "stack": ["React.js", "Node.js", "MySQL", "Tailwind CSS"],
-  "summary": "ZeroKoin is a next-generation crypto platform that combines tokenized learning, smart tools, and real-world rewards. It empowers users to start their journey from zero and grow with purpose through a secure, modern, and intuitive interface.",
-  "image": "/projects/Frame Campus pro.png",
-  "features": [
-    "Real-time ZeroKoin/USDT price tracking",
-    "Market cap and 24h performance stats",
-    "Buy ZeroKoin and download app directly",
-    "Comprehensive 'What is ZeroKoin?' section",
-    "Vision, mission, and key features highlights",
-    "Why We Exist cards with detailed explanations",
-    "Mobile app launching soon showcase",
-    "Roadmap to Tier 1 exchange listings",
-    "Official whitepaper download option",
-    "Responsive and futuristic landing page design"
-  ],
-  "github": "#",
-  "demo": "https://zerokoin.com/"
-}
-
+      "id": 5,
+      "name": "Event Vista",
+      "category": "Event Booking Platform",
+      "stack": ["React.js", "Node.js", "MongoDB", "Tailwind CSS"],
+      "summary": "Full-stack event booking platform where users browse company profiles and book events. Admin dashboard for event approvals, creation, and gallery management with role-based authentication.",
+      "image": "/projects/Screenshot 2025-08-22 152736.png",
+      "features": ["User event booking", "Company profile browsing", "Admin dashboard", "Event management", "Image gallery", "Role-based auth", "Real-time availability"],
+      "github": "#",
+      "demo": "#"
+    }
   ]
 }
