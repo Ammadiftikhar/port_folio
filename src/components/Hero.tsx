@@ -1,330 +1,231 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronDown, Download, Mail, Github, Linkedin } from 'lucide-react';
-import FloatingShapes from './FloatingShapes';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { ArrowDown, Download, Mail, Github, Linkedin, MapPin } from 'lucide-react';
+import Blobs from './Blobs';
+import Counter from './Counter';
 import siteData from '../data/siteData.json';
 
+const RESUME_FILE = 'Ammad-Iftikhar-Full-Stack-Developer.pdf';
+const photo = '/WhatsApp Image 2025-08-21 at 15.39.44_886ed721.jpg';
+
+const statColors = [
+  'text-grape dark:text-grape-light',
+  'text-candy dark:text-candy-light',
+  'text-sun dark:text-sun-light',
+  'text-mint dark:text-mint-light',
+];
+
 const Hero: React.FC = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const roles: string[] = (siteData as { roles?: string[] }).roles ?? [siteData.role];
+  const stats = (siteData as { stats?: { label: string; value: string }[] }).stats ?? [];
+  const [ri, setRi] = useState(0);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    if (roles.length < 2) return;
+    const id = window.setInterval(() => setRi((i) => (i + 1) % roles.length), 2600);
+    return () => window.clearInterval(id);
+  }, [roles.length]);
 
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleScrollToProjects = () => {
-    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  // gentle mouse parallax for the photo block
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const spx = useSpring(px, { stiffness: 120, damping: 20 });
+  const spy = useSpring(py, { stiffness: 120, damping: 20 });
+  const onParallax = (e: React.MouseEvent) => {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    px.set(((e.clientX - r.left) / r.width - 0.5) * 18);
+    py.set(((e.clientY - r.top) / r.height - 0.5) * 18);
+  };
+  const resetParallax = () => {
+    px.set(0);
+    py.set(0);
   };
 
-  const handleScrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
-  const textVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => isMobile ? {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.3,
-        ease: "easeOut"
-      }
-    } : ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.2,
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    })
-  };
-
-  const buttonVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: isMobile ? {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        delay: 0.4,
-        duration: 0.3,
-        ease: "easeOut"
-      }
-    } : {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        delay: 0.8,
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  };
+  const socials = [
+    { href: `mailto:${siteData.contact.email}`, Icon: Mail, label: 'Email' },
+    { href: siteData.contact.github, Icon: Github, label: 'GitHub' },
+    { href: siteData.contact.linkedin, Icon: Linkedin, label: 'LinkedIn' },
+  ];
 
   return (
-    <section 
-      id="home" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-primary-50 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 pt-16 section-spacing"
-    >
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-noise opacity-30" />
-      
-      {/* Animated Background Gradient */}
-      <div className="hidden md:block">
-        <motion.div
-          style={{ y: scrollY * -0.5 }}
-          className="absolute inset-0 bg-gradient-radial from-primary-200/20 via-transparent to-accent-200/20 dark:from-primary-900/20 dark:via-transparent dark:to-accent-900/20"
-        />
-      </div>
+    <section id="home" className="section relative min-h-screen overflow-hidden pt-28">
+      <Blobs />
 
-      {/* Floating Shapes */}
-      <div className="hidden md:block">
-        <FloatingShapes />
-      </div>
-
-      {/* Main Content */}
-      <div className="relative z-10 responsive-container text-center">
-        <div className="max-w-4xl mx-auto mt-5">
-          {/* Greeting */}
-          {isMobile ? (
-            <p className="responsive-body text-gray-600 dark:text-gray-400 mb-4 font-medium">
-              Hello, I'm
-            </p>
-          ) : (
-            <motion.p
-              variants={textVariants}
-              custom={0}
-              initial="hidden"
-              animate="visible"
-              className="responsive-body text-gray-600 dark:text-gray-400 mb-4 font-medium"
-            >
-              Hello, I'm
-            </motion.p>
-          )}
-
-          {/* Name */}
-          {isMobile ? (
-            <h1 className="responsive-heading-1 text-gray-900 dark:text-white mb-6 leading-tight">
-              <span className="text-gradient">{siteData.name}</span>
-            </h1>
-          ) : (
-            <motion.h1
-              variants={textVariants}
-              custom={1}
-              initial="hidden"
-              animate="visible"
-              className="responsive-heading-1 text-gray-900 dark:text-white mb-6 leading-tight"
-            >
-              <span className="text-gradient">{siteData.name}</span>
-            </motion.h1>
-          )}
-
-          {/* Role */}
-          {isMobile ? (
-            <h2 className="responsive-heading-2 text-gray-700 dark:text-gray-300 mb-8 leading-tight">
-              {siteData.role}
-            </h2>
-          ) : (
-            <motion.h2
-              variants={textVariants}
-              custom={2}
-              initial="hidden"
-              animate="visible"
-              className="responsive-heading-2 text-gray-700 dark:text-gray-300 mb-8 leading-tight"
-            >
-              {siteData.role}
-            </motion.h2>
-          )}
-
-          {/* Tagline */}
-          {isMobile ? (
-            <p className="responsive-body text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-              {siteData.tagline}
-            </p>
-          ) : (
-            <motion.p
-              variants={textVariants}
-              custom={3}
-              initial="hidden"
-              animate="visible"
-              className="responsive-body text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed"
-            >
-              {siteData.tagline}
-            </motion.p>
-          )}
-
-          {/* Action Buttons */}
-          {isMobile ? (
-            <div className="flex flex-col gap-4 justify-center items-center mb-12">
-              <button
-                onClick={handleScrollToProjects}
-                className="btn-primary mobile-btn"
-              >
-                View Projects
-              </button>
-
-              <a
-                href={siteData.contact.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary mobile-btn gap-2"
-              >
-                <Download size={20} />
-                Download Resume
-              </a>
-
-              <button
-                onClick={handleScrollToContact}
-                className="btn-secondary mobile-btn"
-              >
-                Contact Me
-              </button>
-            </div>
-          ) : (
-            <motion.div
-              variants={buttonVariants}
-              initial="hidden"
-              animate="visible"
-              className="flex flex-row gap-4 justify-center items-center mb-12"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleScrollToProjects}
-                className="btn-primary px-8 py-3"
-              >
-                View Projects
-              </motion.button>
-
-              <motion.a
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                href={siteData.contact.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary flex items-center justify-center gap-2 px-8 py-3"
-              >
-                <Download size={20} />
-                Download Resume
-              </motion.a>
-
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleScrollToContact}
-                className="btn-secondary px-8 py-3"
-              >
-                Contact Me
-              </motion.button>
-            </motion.div>
-          )}
-
-          {/* Social Links */}
-          {isMobile ? (
-            <div className="flex justify-center space-x-6 mb-16">
-              <a
-                href={`mailto:${siteData.contact.email}`}
-                className="touch-target p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center justify-center"
-                aria-label="Send email"
-              >
-                <Mail size={24} />
-              </a>
-
-              <a
-                href={siteData.contact.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="touch-target p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center justify-center"
-                aria-label="GitHub profile"
-              >
-                <Github size={24} />
-              </a>
-
-              <a
-                href={siteData.contact.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="touch-target p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center justify-center"
-                aria-label="LinkedIn profile"
-              >
-                <Linkedin size={24} />
-              </a>
-            </div>
-          ) : (
-            <motion.div
-              variants={buttonVariants}
-              initial="hidden"
-              animate="visible"
-              className="flex justify-center space-x-6 mb-16"
-            >
-              <motion.a
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                href={`mailto:${siteData.contact.email}`}
-                className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 touch-target flex items-center justify-center"
-                aria-label="Send email"
-              >
-                <Mail size={24} />
-              </motion.a>
-
-              <motion.a
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                href={siteData.contact.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 touch-target flex items-center justify-center"
-                aria-label="GitHub profile"
-              >
-                <Github size={24} />
-              </motion.a>
-
-              <motion.a
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                href={siteData.contact.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full glass dark:glass-dark text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 touch-target flex items-center justify-center"
-                aria-label="LinkedIn profile"
-              >
-                <Linkedin size={24} />
-              </motion.a>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="hidden md:block">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+      <div className="container-p grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+        {/* text */}
+        <div>
+          <motion.span
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.6 }}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+            transition={{ duration: 0.5 }}
+            className="eyebrow"
           >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="p-2 rounded-full text-gray-400 dark:text-gray-500"
+            👋 Hello, I&apos;m Ammad
+          </motion.span>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.05 }}
+            className="mt-5 font-display text-5xl font-extrabold leading-[1.05] sm:text-6xl md:text-7xl"
+          >
+            Ammad
+            <br />
+            Iftikhar
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.12 }}
+            className="mt-6 text-xl font-semibold text-ink/70 dark:text-slate-300 sm:text-2xl"
+          >
+            I&apos;m a{' '}
+            <span className="marker">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={roles[ri]}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="inline-block font-extrabold text-ink dark:text-white"
+                >
+                  {roles[ri]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.18 }}
+            className="mt-5 max-w-lg text-base leading-relaxed text-ink/60 dark:text-slate-400"
+          >
+            {siteData.tagline}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.24 }}
+            className="mt-8 flex flex-wrap items-center gap-3"
+          >
+            <motion.button
+              whileHover={{ y: -2, scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => go('projects')}
+              className="btn-primary"
             >
-              <ChevronDown size={32} />
-            </motion.div>
+              See my work
+            </motion.button>
+            <motion.a
+              whileHover={{ y: -2, scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              href={siteData.contact.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              download={RESUME_FILE}
+              className="btn-outline"
+            >
+              <Download size={16} />
+              Download CV
+            </motion.a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-7 flex items-center gap-3"
+          >
+            {socials.map(({ href, Icon, label }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="icon-btn">
+                <Icon size={18} />
+              </a>
+            ))}
+            <span className="ml-1 inline-flex items-center gap-2 text-sm font-semibold text-ink/50 dark:text-slate-400">
+              <MapPin size={15} className="text-candy" />
+              {siteData.contact.location}
+            </span>
           </motion.div>
         </div>
+
+        {/* photo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          onMouseMove={onParallax}
+          onMouseLeave={resetParallax}
+          className="relative mx-auto w-[16rem] sm:w-[20rem] lg:w-full lg:max-w-sm"
+        >
+          <motion.div style={{ x: spx, y: spy }} className="absolute -inset-6 -z-10 mask-blob bg-gradient-to-br from-grape via-candy to-sun opacity-80 blur-2xl animate-blob-slow dark:opacity-60" />
+          <div className="absolute -inset-3 -z-10 mask-blob border-2 border-dashed border-ink/20 dark:border-white/20 animate-spin-slow" />
+          <motion.div
+            style={{ x: spx, y: spy }}
+            className="mask-blob overflow-hidden border-4 border-white shadow-pop dark:border-ink-card"
+          >
+            <img src={photo} alt="Ammad Iftikhar" className="aspect-square w-full object-cover" />
+          </motion.div>
+
+          {/* stickers */}
+          <motion.div
+            style={{ x: spx, y: spy }}
+            className="card absolute -left-5 top-8 flex items-center gap-2 px-3 py-2 text-sm font-bold shadow-lg animate-float"
+          >
+            ⚡ <span className="text-ink/70 dark:text-slate-300">Full Stack</span>
+          </motion.div>
+          <motion.div
+            style={{ x: spx, y: spy }}
+            className="card absolute -right-4 bottom-10 flex items-center gap-2 px-3 py-2 text-sm font-bold shadow-lg animate-float"
+          >
+            🚀 <span className="text-ink/70 dark:text-slate-300">3+ yrs</span>
+          </motion.div>
+          <div className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border-2 border-white bg-mint px-4 py-1.5 text-sm font-bold text-white shadow-lg dark:border-ink-card">
+            <span className="h-2 w-2 rounded-full bg-white" /> Open to work
+          </div>
+        </motion.div>
       </div>
+
+      {/* stats */}
+      {stats.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="container-p mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4"
+        >
+          {stats.map((s, i) => (
+            <motion.div
+              key={s.label}
+              whileHover={{ y: -4 }}
+              className="card px-4 py-5 text-center"
+            >
+              <Counter
+                value={s.value}
+                className={`block font-display text-3xl font-extrabold ${statColors[i % statColors.length]}`}
+              />
+              <div className="mt-1 text-xs font-semibold text-ink/50 dark:text-slate-400">{s.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+
+      <button
+        onClick={() => go('about')}
+        className="mx-auto mt-14 flex items-center gap-2 text-sm font-semibold text-ink/40 dark:text-slate-500"
+        aria-label="Scroll down"
+      >
+        <span className="animate-float">
+          <ArrowDown size={18} />
+        </span>
+        scroll
+      </button>
     </section>
   );
 };

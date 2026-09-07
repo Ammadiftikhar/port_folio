@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Github } from 'lucide-react';
+import { X, ExternalLink, Lock, Check } from 'lucide-react';
+import ProjectImage from './ProjectImage';
 
 interface Project {
   id: number;
@@ -21,236 +22,101 @@ interface ProjectModalProps {
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose }) => {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    if (isOpen) {
+      document.addEventListener('keydown', onKey);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
   if (!project) return null;
-
-  const modalVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.8,
-      y: 20
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 30
-      }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: 20,
-      transition: {
-        duration: 0.2
-      }
-    }
-  };
-
-  const backdropVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    exit: { opacity: 0 }
-  };
-
-  const contentVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: 0.1,
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 }
-  };
+  const hasDemo = !!project.demo && project.demo !== '#';
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
           <motion.div
-            variants={backdropVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-ink/60 backdrop-blur-sm"
             onClick={onClose}
           />
 
-          {/* Modal */}
           <motion.div
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="relative w-full max-w-4xl max-h-[90vh] glass dark:glass-dark rounded-2xl overflow-hidden"
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="relative flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-4xl border-2 border-ink/10 bg-white dark:border-white/10 dark:bg-ink-card"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
-            <motion.button
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
+            <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-full text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
-              aria-label="Close modal"
+              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/30 bg-ink/50 text-white backdrop-blur-sm transition-transform hover:rotate-90"
+              aria-label="Close"
             >
-              <X size={24} />
-            </motion.button>
+              <X size={18} />
+            </button>
 
-            <div className="overflow-y-auto max-h-[90vh]">
-              {/* Header Image */}
-              <div className="relative h-64 md:h-80 overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                
-                {/* Project Title Overlay */}
-                <div className="absolute bottom-6 left-6 right-16">
-                  <motion.div
-                    variants={contentVariants}
-                    initial="hidden"
-                    animate="visible"
-                  >
-                    <motion.h2 
-                      variants={itemVariants}
-                      className="text-3xl md:text-4xl font-bold text-white mb-2"
-                    >
-                      {project.name}
-                    </motion.h2>
-                    <motion.div 
-                      variants={itemVariants}
-                      className="flex items-center gap-3"
-                    >
-                      <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
-                        {project.category}
-                      </span>
-                      <div className="flex gap-2">
-                        <motion.a
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors duration-200"
-                          aria-label="View source code"
-                        >
-                          <Github size={18} />
-                        </motion.a>
-                        <motion.a
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          href={project.demo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors duration-200"
-                          aria-label="View live demo"
-                        >
-                          <ExternalLink size={18} />
-                        </motion.a>
-                      </div>
-                    </motion.div>
-                  </motion.div>
+            <div className="overflow-y-auto">
+              <div className="relative aspect-[16/9] overflow-hidden">
+                <ProjectImage src={project.image} alt={project.name} name={project.name} className="h-full w-full object-cover" />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent p-5">
+                  <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+                    {project.category}
+                  </span>
+                  <h2 className="mt-2 font-display text-2xl font-extrabold text-white sm:text-3xl">{project.name}</h2>
                 </div>
               </div>
 
-              {/* Content */}
-              <motion.div
-                variants={contentVariants}
-                initial="hidden"
-                animate="visible"
-                className="p-6 md:p-8 space-y-8"
-              >
-                {/* Description */}
-                <motion.div variants={itemVariants}>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                    Project Overview
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {project.summary}
-                  </p>
-                </motion.div>
+              <div className="space-y-7 p-6 sm:p-8">
+                <div>
+                  <h3 className="font-display text-sm font-bold uppercase tracking-wide text-ink/40 dark:text-slate-500">Overview</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink/70 dark:text-slate-300">{project.summary}</p>
+                </div>
 
-                {/* Features */}
-                <motion.div variants={itemVariants}>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                    Key Features
-                  </h3>
-                  <div className="grid md:grid-cols-2 gap-3">
-                    {project.features.map((feature, index) => (
-                      <motion.div
-                        key={index}
-                        variants={itemVariants}
-                        className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
-                      >
-                        <div className="w-2 h-2 bg-gradient-to-r from-primary-600 to-accent-600 rounded-full mt-2 flex-shrink-0" />
-                        <span className="text-gray-700 dark:text-gray-300 text-sm">
-                          {feature}
+                <div>
+                  <h3 className="font-display text-sm font-bold uppercase tracking-wide text-ink/40 dark:text-slate-500">Highlights</h3>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {project.features.map((f, i) => (
+                      <div key={i} className="flex items-start gap-2 rounded-2xl bg-ink/[0.03] p-3 text-sm text-ink/70 dark:bg-white/5 dark:text-slate-300">
+                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-mint/20 text-mint">
+                          <Check size={11} />
                         </span>
-                      </motion.div>
+                        {f}
+                      </div>
                     ))}
                   </div>
-                </motion.div>
+                </div>
 
-                {/* Tech Stack */}
-                <motion.div variants={itemVariants}>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                    Technology Stack
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {project.stack.map((tech, index) => (
-                      <motion.span
-                        key={tech}
-                        variants={itemVariants}
-                        whileHover={{ scale: 1.05 }}
-                        className="px-4 py-2 bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/30 dark:to-accent-900/30 text-primary-700 dark:text-primary-300 rounded-lg font-medium text-sm"
-                      >
-                        {tech}
-                      </motion.span>
+                <div>
+                  <h3 className="font-display text-sm font-bold uppercase tracking-wide text-ink/40 dark:text-slate-500">Stack</h3>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {project.stack.map((t) => (
+                      <span key={t} className="pill">{t}</span>
                     ))}
                   </div>
-                </motion.div>
+                </div>
 
-                {/* Action Buttons */}
-                <motion.div 
-                  variants={itemVariants}
-                  className="flex flex-col sm:flex-row gap-4 pt-4"
-                >
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary flex items-center justify-center gap-2"
-                  >
-                    <ExternalLink size={18} />
-                    View Live Demo
-                  </motion.a>
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-secondary flex items-center justify-center gap-2"
-                  >
-                    <Github size={18} />
-                    View Source Code
-                  </motion.a>
-                </motion.div>
-              </motion.div>
+                <div>
+                  {hasDemo ? (
+                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                      <ExternalLink size={16} /> Visit live demo
+                    </a>
+                  ) : (
+                    <span className="btn-outline cursor-default opacity-70">
+                      <Lock size={16} /> Private / client project
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>

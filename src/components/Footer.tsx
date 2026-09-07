@@ -1,205 +1,134 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, ArrowUp, Heart } from "lucide-react";
-import siteData from "../data/siteData.json";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Github, Linkedin, Mail, ArrowUp, ArrowUpRight, MapPin } from 'lucide-react';
+import siteData from '../data/siteData.json';
+
+const links = [
+  { name: 'About', href: '#about' },
+  { name: 'Work', href: '#projects' },
+  { name: 'Path', href: '#experience' },
+  { name: 'Skills', href: '#skills' },
+  { name: 'Education', href: '#education' },
+  { name: 'Contact', href: '#contact' },
+];
+
+const socials = [
+  { Icon: Github, href: siteData.contact.github, label: 'GitHub' },
+  { Icon: Linkedin, href: siteData.contact.linkedin, label: 'LinkedIn' },
+  { Icon: Mail, href: `mailto:${siteData.contact.email}`, label: 'Email' },
+];
 
 const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear();
-
-  const socialLinks = [
-    {
-      icon: Github,
-      label: "GitHub",
-      href: siteData.contact.github,
-      color: "hover:text-gray-900 dark:hover:text-white"
-    },
-    {
-      icon: Linkedin,
-      label: "LinkedIn",
-      href: siteData.contact.linkedin,
-      color: "hover:text-blue-600 dark:hover:text-blue-400"
-    },
-    {
-      icon: Mail,
-      label: "Email",
-      href: `mailto:${siteData.contact.email}`,
-      color: "hover:text-purple-600 dark:hover:text-purple-400"
-    }
-  ];
-
-  const quickLinks = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Projects", href: "#projects" },
-    { name: "Experience", href: "#experience" },
-    { name: "Skills", href: "#skills" },
-    { name: "Contact", href: "#contact" }
-  ];
-
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleNavClick = (href: string) => {
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: "smooth" });
-  };
+  const year = new Date().getFullYear();
+  const go = (href: string) => document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <footer className="relative bg-gray-900 dark:bg-gray-950 text-white overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-noise opacity-10" />
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-900/20 via-transparent to-accent-900/20" />
+    <footer className="relative overflow-hidden border-t-2 border-ink/10 bg-white dark:border-white/10 dark:bg-ink-soft">
+      {/* blob accent */}
+      <div className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full bg-grape/20 blur-3xl dark:bg-grape/15" />
+      <div className="pointer-events-none absolute -bottom-32 right-0 h-72 w-72 rounded-full bg-candy/20 blur-3xl dark:bg-candy/15" />
 
-      <div className="relative container mx-auto px-6 lg:px-8">
-        {/* Main Footer Content */}
-        <div className="pt-16 pb-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {/* Brand Section */}
-            <div className="lg:col-span-2">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="mb-6"
-              >
-                <h3 className="text-2xl font-bold mb-4">
-                  <span className="text-gradient">{siteData.name}</span>
-                </h3>
-                <p className="text-gray-300 leading-relaxed max-w-md">
-                  {siteData.role} passionate about creating exceptional web experiences. Let's build something amazing
-                  together.
-                </p>
-              </motion.div>
-
-              {/* Social Links */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                viewport={{ once: true }}
-                className="flex gap-4"
-              >
-                {socialLinks.map((social) => (
-                  <motion.a
-                    key={social.label}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`p-3 bg-gray-800 dark:bg-gray-900 rounded-xl text-gray-400 ${social.color} transition-colors duration-200`}
-                    aria-label={social.label}
-                  >
-                    <social.icon size={20} />
-                  </motion.a>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Quick Links */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
+      <div className="container-p relative py-16">
+        {/* CTA */}
+        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-flex items-center gap-2 rounded-full bg-mint/15 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-mint">
+              <span className="h-2 w-2 rounded-full bg-mint" /> Available for work
+            </span>
+            <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-4xl md:text-[2.75rem]">
+              Let&apos;s make something <span className="text-grad">awesome</span> together.
+            </h2>
+            <motion.a
+              href={`mailto:${siteData.contact.email}`}
+              whileHover={{ y: -2, scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="btn-primary mt-6"
             >
-              <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
-              <ul className="space-y-3">
-                {quickLinks.map((link) => (
-                  <li key={link.name}>
-                    <motion.button
-                      whileHover={{ x: 5 }}
-                      onClick={() => handleNavClick(link.href)}
-                      className="text-gray-400 hover:text-white transition-colors duration-200 text-left"
+              Start a conversation
+              <ArrowUpRight size={16} />
+            </motion.a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="grid grid-cols-2 gap-6 sm:gap-10 lg:justify-items-end"
+          >
+            <div>
+              <p className="mb-3 text-xs font-bold uppercase tracking-wider text-ink/40 dark:text-slate-500">Explore</p>
+              <ul className="space-y-2">
+                {links.map((l) => (
+                  <li key={l.name}>
+                    <button
+                      onClick={() => go(l.href)}
+                      className="text-sm font-semibold text-ink/60 transition-colors hover:text-grape dark:text-slate-400 dark:hover:text-grape-light"
                     >
-                      {link.name}
-                    </motion.button>
+                      {l.name}
+                    </button>
                   </li>
                 ))}
               </ul>
-            </motion.div>
-
-            {/* Contact Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <h4 className="text-lg font-semibold mb-6">Get in Touch</h4>
-              <div className="space-y-3">
-                <a
-                  href={`mailto:${siteData.contact.email}`}
-                  className="block text-gray-400 hover:text-white transition-colors duration-200"
-                >
+            </div>
+            <div>
+              <p className="mb-3 text-xs font-bold uppercase tracking-wider text-ink/40 dark:text-slate-500">Reach me</p>
+              <div className="space-y-2 text-sm font-semibold text-ink/60 dark:text-slate-400">
+                <a href={`mailto:${siteData.contact.email}`} className="block break-all transition-colors hover:text-grape dark:hover:text-grape-light">
                   {siteData.contact.email}
                 </a>
-                <a
-                  href={`tel:${siteData.contact.phone}`}
-                  className="block text-gray-400 hover:text-white transition-colors duration-200"
-                >
+                <a href={`tel:${siteData.contact.phone}`} className="block transition-colors hover:text-grape dark:hover:text-grape-light">
                   {siteData.contact.phone}
                 </a>
-                <p className="text-gray-400">{siteData.contact.location}</p>
+                <p className="flex items-center gap-1.5">
+                  <MapPin size={13} className="text-candy" />
+                  {siteData.contact.location}
+                </p>
               </div>
-
-              {/* Resume Link */}
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href={siteData.contact.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-6 px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-medium hover:shadow-lg transition-shadow duration-200"
-              >
-                Download Resume
-              </motion.a>
-            </motion.div>
-          </div>
+              <div className="mt-4 flex gap-2">
+                {socials.map(({ Icon, href, label }) => (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="icon-btn h-9 w-9"
+                  >
+                    <Icon size={16} />
+                  </motion.a>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
+        {/* giant name watermark */}
+        <div className="pointer-events-none mt-14 select-none">
+          <p className="bg-gradient-to-r from-grape via-candy to-sun bg-clip-text text-center font-display text-[18vw] font-extrabold leading-none text-transparent opacity-[0.14] dark:opacity-20 lg:text-[13rem]">
+            AMMAD
+          </p>
+        </div>
 
-        {/* Bottom Section */}
-        <div className="py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-gray-400 text-sm flex flex-wrap items-center justify-center gap-2"
-          >
-            © {currentYear}
-            <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-accent-400">
-              {siteData.name}
-            </span>
-            <span className="hidden sm:inline">•</span>
-            <span className="flex items-center gap-2">
-              Built with
-              <span className="px-2 py-0.5 rounded-full bg-white/10 text-gray-200">React</span>
-              <span className="px-2 py-0.5 rounded-full bg-white/10 text-gray-200">Remix</span>
-              <span className="px-2 py-0.5 rounded-full bg-white/10 text-gray-200">Tailwind</span>
-            </span>
-          </motion.p>
-
-          {/* Back to Top Button */}
+        {/* bottom bar */}
+        <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t-2 border-ink/5 pt-6 dark:border-white/5 sm:flex-row">
+          <p className="text-sm text-ink/45 dark:text-slate-500">
+            © {year} Ammad Iftikhar. Built with React, TypeScript &amp; Tailwind.
+          </p>
           <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.1 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleScrollToTop}
-            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+            className="flex items-center gap-1.5 rounded-full border-2 border-ink/10 px-4 py-2 text-sm font-bold text-ink/55 transition-colors hover:border-grape hover:text-grape dark:border-white/10 dark:text-slate-400"
           >
-            Back to Top
-            <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}>
-              <ArrowUp size={16} />
-            </motion.div>
+            Back to top <ArrowUp size={14} />
           </motion.button>
         </div>
       </div>

@@ -1,227 +1,176 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
-import { ExternalLink, Github } from 'lucide-react';
+import { ArrowUpRight, Lock, ExternalLink, Github } from 'lucide-react';
 import ProjectModal from './ProjectModal';
+import ProjectImage from './ProjectImage';
+import SectionHeading from './SectionHeading';
+import Tilt from './Tilt';
 import siteData from '../data/siteData.json';
 
+type Project = (typeof siteData.projects)[number];
+
+const themes = [
+  { pill: 'bg-grape/15 text-grape', shadow: 'hover:shadow-pop', border: 'hover:border-grape' },
+  { pill: 'bg-candy/15 text-candy', shadow: 'hover:shadow-pop-candy', border: 'hover:border-candy' },
+  { pill: 'bg-sun/15 text-sun', shadow: 'hover:shadow-pop-sun', border: 'hover:border-sun' },
+  { pill: 'bg-mint/15 text-mint', shadow: 'hover:shadow-pop-mint', border: 'hover:border-mint' },
+  { pill: 'bg-sky2/15 text-sky2', shadow: 'hover:shadow-pop-sky', border: 'hover:border-sky2' },
+];
+
 const Projects: React.FC = () => {
-  const { ref, isIntersecting } = useIntersectionObserver({
-    threshold: 0.1,
-    freezeOnceVisible: true
-  });
+  const [selected, setSelected] = useState<Project | null>(null);
+  const [stickerId, setStickerId] = useState<number | null>(null);
+  const timer = useRef<number | null>(null);
 
-  const [selectedProject, setSelectedProject] =
-    useState<(typeof siteData.projects)[number] | null>(null);
+  const categories = ['All', ...Array.from(new Set(siteData.projects.map((p) => p.category)))];
+  const [filter, setFilter] = useState('All');
+  const list = filter === 'All' ? siteData.projects : siteData.projects.filter((p) => p.category === filter);
 
-  // NEW: which project should show the “Nope—Private” sticker
-  const [stickerForId, setStickerForId] = useState<number | null>(null);
-  const stickerTimerRef = useRef<number | null>(null);
-
-  const categories = ['All', ...Array.from(new Set(siteData.projects.map(p => p.category)))];
-  const [activeFilter, setActiveFilter] = useState('All');
-  const filteredProjects =
-    activeFilter === 'All' ? siteData.projects : siteData.projects.filter(p => p.category === activeFilter);
-
-  const textVariants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } } };
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: (i: number) => ({ opacity: 1, y: 0, scale: 1, transition: { delay: i * 0.1, duration: 0.6, ease: 'easeOut' } })
-  };
-  const filterVariants = { hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } } };
-
-  // Helper to flash the sticker for a moment
-  const flashSticker = (projectId: number) => {
-    setStickerForId(projectId);
-    if (stickerTimerRef.current) window.clearTimeout(stickerTimerRef.current);
-    stickerTimerRef.current = window.setTimeout(() => setStickerForId(null), 1600) as unknown as number;
+  const flash = (id: number) => {
+    setStickerId(id);
+    if (timer.current) window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setStickerId(null), 1500) as unknown as number;
   };
 
   return (
     <>
-      <section
-        id="projects"
-        className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900"
-        ref={ref}
-      >
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            {/* Section Header */}
-            <motion.div variants={textVariants} initial="hidden" animate={isIntersecting ? 'visible' : 'hidden'} className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                Featured <span className="text-gradient">Projects</span>
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-                Here are some of the projects I've worked on, showcasing my skills and experience
-              </p>
-              <div className="w-24 h-1 bg-gradient-to-r from-primary-600 to-accent-600 mx-auto rounded-full" />
-            </motion.div>
+      <section id="projects" className="section overflow-hidden bg-white dark:bg-ink-soft">
+        <div className="container-p">
+          <SectionHeading
+            eyebrow="my work"
+            accent="candy"
+            title={
+              <>
+                Things I&apos;ve <span className="text-grad">shipped</span>
+              </>
+            }
+            subtitle="Full-stack products across AI/legal-tech, sports management, booking and business operations."
+          />
 
-            {/* Filter Buttons */}
-            <motion.div variants={textVariants} initial="hidden" animate={isIntersecting ? 'visible' : 'hidden'} className="flex justify-center mb-12">
-              <div className="flex flex-wrap justify-center gap-3 glass dark:glass-dark rounded-2xl p-2">
-                {categories.map((category) => (
-                  <motion.button
-                    key={category}
-                    variants={filterVariants}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setActiveFilter(category)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      activeFilter === category
-                        ? 'bg-gradient-to-r from-primary-600 to-accent-600 text-white shadow-lg'
-                        : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800/50'
-                    }`}
-                  >
-                    {category}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
+          <div className="mb-8 flex flex-wrap gap-2">
+            {categories.map((c) => (
+              <motion.button
+                key={c}
+                onClick={() => setFilter(c)}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.94 }}
+                className={`relative overflow-hidden rounded-full border-2 px-4 py-2 text-sm font-bold transition-colors ${
+                  filter === c
+                    ? 'border-transparent text-white'
+                    : 'border-ink/10 text-ink/60 hover:border-grape hover:text-grape dark:border-white/10 dark:text-slate-400'
+                }`}
+              >
+                {filter === c && (
+                  <motion.span
+                    layoutId="filter-blob"
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-grape to-candy"
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{c}</span>
+              </motion.button>
+            ))}
+          </div>
 
-            {/* Projects Grid */}
-            <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <AnimatePresence mode="popLayout">
-                {filteredProjects.map((project, index) => (
-                  <motion.div
+          <motion.div layout className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <AnimatePresence mode="popLayout">
+              {list.map((project, i) => {
+                const t = themes[i % themes.length];
+                const hasDemo = !!project.demo && project.demo !== '#';
+                return (
+                  <motion.article
                     key={project.id}
                     layout
-                    variants={cardVariants}
-                    custom={index}
-                    initial="hidden"
-                    animate="visible"
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    whileHover={{ y: -5, scale: 1.02 }}
-                    className="glass dark:glass-dark rounded-xl overflow-hidden cursor-pointer group relative"
-                    onClick={() => setSelectedProject(project)}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
                   >
-                    {/* Project Image */}
-                    <div className="relative overflow-hidden h-48">
-                      <img
+                  <Tilt
+                    max={5}
+                    onClick={() => setSelected(project)}
+                    className={`card card-pop group flex h-full cursor-pointer flex-col overflow-hidden border-2 [transform-style:preserve-3d] ${t.border} ${t.shadow}`}
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden">
+                      <ProjectImage
                         src={project.image}
                         alt={project.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        loading="lazy"
+                        name={project.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                      {/* Overlay Buttons */}
-                      <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        {/* GITHUB → show sticker */}
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={(e) => {
-                            e.preventDefault();   // block any default link behavior
-                            e.stopPropagation();  // don't open the modal/card
-                            flashSticker(project.id);
-                          }}
-                          className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-colors duration-200"
-                          aria-label="Code is private"
+                      <div className="absolute right-3 top-3 flex gap-1.5">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); flash(project.id); }}
+                          className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white backdrop-blur-sm"
+                          aria-label="Private repo"
                         >
-                          <Github size={20} />
-                        </motion.button>
-
-                        {/* Live demo unchanged */}
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(project.demo, '_blank');
-                          }}
-                          className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-colors duration-200"
-                          aria-label="View live demo"
-                        >
-                          <ExternalLink size={20} />
-                        </motion.button>
+                          <Lock size={13} />
+                        </button>
+                        {hasDemo && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); window.open(project.demo, '_blank', 'noopener,noreferrer'); }}
+                            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white backdrop-blur-sm"
+                            aria-label="Live demo"
+                          >
+                            <ExternalLink size={13} />
+                          </button>
+                        )}
                       </div>
+                      <AnimatePresence>
+                        {stickerId === project.id && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -6, rotate: -4 }}
+                            animate={{ opacity: 1, y: 0, rotate: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute left-3 top-3 rounded-full border-2 border-white bg-ink px-3 py-1 text-xs font-bold text-white"
+                          >
+                            🔒 private · client work
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
 
-                    {/* Project Info */}
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
-                          {project.name}
-                        </h3>
-                        <span className="text-xs px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full">
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${t.pill}`}>
                           {project.category}
                         </span>
+                        <ArrowUpRight
+                          size={18}
+                          className="text-ink/30 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-grape dark:text-slate-600"
+                        />
                       </div>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">{project.summary}</p>
-
-                      {/* Tech Stack */}
-                      <div className="flex flex-wrap gap-2">
-                        {project.stack.slice(0, 3).map((tech) => (
-                          <span key={tech} className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md">
-                            {tech}
-                          </span>
+                      <h3 className="mt-3 font-display text-xl font-bold">{project.name}</h3>
+                      <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-ink/60 dark:text-slate-400">
+                        {project.summary}
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {project.stack.slice(0, 4).map((s) => (
+                          <span key={s} className="pill text-[11px]">{s}</span>
                         ))}
-                        {project.stack.length > 3 && (
-                          <span className="px-2 py-1 text-xs text-primary-600 dark:text-primary-400 font-medium">+{project.stack.length - 3} more</span>
+                        {project.stack.length > 4 && (
+                          <span className="pill text-[11px]">+{project.stack.length - 4}</span>
                         )}
                       </div>
                     </div>
+                  </Tilt>
+                  </motion.article>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
 
-                    {/* FUN STICKER (per-card) */}
-                    <AnimatePresence>
-                      {stickerForId === project.id && (
-                        <motion.div
-                          key="nope-sticker"
-                          initial={{ opacity: 0, scale: 0.6, y: -10, rotate: -8 }}
-                          animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
-                          exit={{ opacity: 0, scale: 0.6, y: -10, rotate: 8 }}
-                          transition={{ type: 'spring', stiffness: 450, damping: 22, duration: 0.6 }}
-                          className="absolute top-3 right-3 z-20 select-none"
-                          aria-live="polite"
-                        >
-                          <div className="relative">
-                            <div className="flex items-center gap-2 rounded-2xl px-3 py-2 bg-white/90 dark:bg-gray-900/90 border border-gray-200 dark:border-gray-700 shadow-xl">
-                              {/* Waving/“No” hand */}
-                              <motion.span
-                                aria-hidden="true"
-                                animate={{ rotate: [0, -25, 25, -15, 15, 0] }}
-                                transition={{ duration: 0.9, times: [0, 0.2, 0.4, 0.6, 0.8, 1] }}
-                                className="text-2xl leading-none"
-                              >
-                                🙅‍♂️
-                              </motion.span>
-                              <span className="text-xs font-semibold text-gray-900 dark:text-white">
-                                Nope — Private Repo
-                              </span>
-                            </div>
-                            {/* small pointer */}
-                            <div className="absolute -bottom-1 right-6 w-3 h-3 bg-white/90 dark:bg-gray-900/90 rotate-45 border-r border-b border-gray-200 dark:border-gray-700" />
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-
-            {/* View More */}
-            <motion.div variants={textVariants} initial="hidden" animate={isIntersecting ? 'visible' : 'hidden'} transition={{ delay: 0.8 }} className="text-center mt-16">
-              <p className="text-gray-600 dark:text-gray-300 mb-6">Want to see more of my work?</p>
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href={siteData.contact.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary inline-flex items-center gap-2"
-              >
-                <Github size={20} />
-                View GitHub Profile
-              </motion.a>
-            </motion.div>
+          <div className="mt-12">
+            <a href={siteData.contact.github} target="_blank" rel="noopener noreferrer" className="btn-outline">
+              <Github size={16} />
+              More on GitHub
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Project Modal */}
-      <ProjectModal project={selectedProject} isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} />
+      <ProjectModal project={selected} isOpen={!!selected} onClose={() => setSelected(null)} />
     </>
   );
 };

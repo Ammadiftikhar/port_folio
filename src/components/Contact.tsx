@@ -1,431 +1,163 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Check, X } from 'lucide-react';
+import { Send, Check, AlertCircle, Mail, Phone, MapPin, Github, Linkedin } from 'lucide-react';
 import siteData from '../data/siteData.json';
+import SectionHeading from './SectionHeading';
+import Blobs from './Blobs';
 
-interface FormData {
-  name: string;
-  email: string;
-  message: string;
-}
-
-interface FormErrors {
-  name?: string;
-  email?: string;
-  message?: string;
-}
+interface FormData { name: string; email: string; message: string }
+type FormErrors = Partial<Record<keyof FormData, string>>;
 
 const Contact: React.FC = () => {
-  const { ref, isIntersecting } = useIntersectionObserver({
-    threshold: 0.2,
-    freezeOnceVisible: true
-  });
-
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    message: ''
-  });
-  
+  const [form, setForm] = useState<FormData>({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const validateForm = (): FormErrors => {
-    const newErrors: FormErrors = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters';
-    }
-    
-    return newErrors;
+  const validate = (): FormErrors => {
+    const e: FormErrors = {};
+    if (form.name.trim().length < 2) e.name = 'Please enter your name';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email';
+    if (form.message.trim().length < 10) e.message = 'A little more detail, please';
+    return e;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
-    }
+    setForm((p) => ({ ...p, [name]: value }));
+    if (errors[name as keyof FormErrors]) setErrors((p) => ({ ...p, [name]: undefined }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const formErrors = validateForm();
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return;
-    }
-    
-    setIsSubmitting(true);
+    const errs = validate();
+    if (Object.keys(errs).length) return setErrors(errs);
+    setBusy(true);
     setErrors({});
-    
     try {
-      // Simulate form submission (replace with actual implementation)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-      
-      // Reset success status after 5 seconds
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 5000);
-    } catch (error) {
-      setSubmitStatus('error');
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 5000);
+      await new Promise((r) => setTimeout(r, 1100));
+      setStatus('success');
+      setForm({ name: '', email: '', message: '' });
+    } catch {
+      setStatus('error');
     } finally {
-      setIsSubmitting(false);
+      setBusy(false);
+      setTimeout(() => setStatus('idle'), 5000);
     }
   };
 
-  const textVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    })
-  };
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: 'Email',
-      value: siteData.contact.email,
-      href: `mailto:${siteData.contact.email}`,
-      color: 'text-blue-600 dark:text-blue-400'
-    },
-    {
-      icon: Phone,
-      label: 'Phone',
-      value: siteData.contact.phone,
-      href: `tel:${siteData.contact.phone}`,
-      color: 'text-green-600 dark:text-green-400'
-    },
-    {
-      icon: MapPin,
-      label: 'Location',
-      value: siteData.contact.location,
-      href: '#',
-      color: 'text-red-600 dark:text-red-400'
-    }
-  ];
-
-  const socialLinks = [
-    {
-      icon: Github,
-      label: 'GitHub',
-      href: siteData.contact.github,
-      color: 'hover:text-gray-900 dark:hover:text-white'
-    },
-    {
-      icon: Linkedin,
-      label: 'LinkedIn', 
-      href: siteData.contact.linkedin,
-      color: 'hover:text-blue-600 dark:hover:text-blue-400'
-    },
-    {
-      icon: Mail,
-      label: 'Email',
-      href: `mailto:${siteData.contact.email}`,
-      color: 'hover:text-purple-600 dark:hover:text-purple-400'
-    }
+  const info = [
+    { Icon: Mail, label: siteData.contact.email, href: `mailto:${siteData.contact.email}`, c: 'bg-grape/15 text-grape' },
+    { Icon: Phone, label: siteData.contact.phone, href: `tel:${siteData.contact.phone}`, c: 'bg-candy/15 text-candy' },
+    { Icon: MapPin, label: siteData.contact.location, href: null, c: 'bg-sun/15 text-sun' },
   ];
 
   return (
-    <section 
-      id="contact" 
-      className="py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"
-      ref={ref}
-    >
-      <div className="container mx-auto px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Section Header */}
+    <section id="contact" className="section overflow-hidden">
+      <Blobs items={[
+        { color: 'grape', className: 'left-[-6rem] top-0 h-64 w-64' },
+        { color: 'candy', className: 'right-[-6rem] bottom-0 h-64 w-64' },
+      ]} />
+      <div className="container-p">
+        <SectionHeading
+          eyebrow="say hi"
+          accent="grape"
+          align="center"
+          title={
+            <>
+              Let&apos;s build <span className="text-grad">something great</span>
+            </>
+          }
+          subtitle="Open to full-time roles, freelance projects and collaborations."
+        />
+
+        <div className="mx-auto grid max-w-4xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <motion.div
-            variants={textVariants}
-            initial="hidden"
-            animate={isIntersecting ? "visible" : "hidden"}
-            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5 }}
+            className="space-y-3"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Get In <span className="text-gradient">Touch</span>
-            </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-              Have a project in mind or want to collaborate? I'd love to hear from you. 
-              Let's discuss how we can bring your ideas to life.
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary-600 to-accent-600 mx-auto rounded-full" />
+            {info.map(({ Icon, label, href, c }) => {
+              const inner = (
+                <>
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${c}`}>
+                    <Icon size={17} />
+                  </span>
+                  <span className="truncate text-sm font-semibold text-ink/70 dark:text-slate-300">{label}</span>
+                </>
+              );
+              return href ? (
+                <a key={label} href={href} className="card card-pop flex items-center gap-3 p-4">{inner}</a>
+              ) : (
+                <div key={label} className="card flex items-center gap-3 p-4">{inner}</div>
+              );
+            })}
+            <div className="flex gap-2 pt-1">
+              {[
+                { Icon: Github, href: siteData.contact.github },
+                { Icon: Linkedin, href: siteData.contact.linkedin },
+                { Icon: Mail, href: `mailto:${siteData.contact.email}` },
+              ].map(({ Icon, href }, i) => (
+                <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="icon-btn">
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Info */}
-            <motion.div
-              variants={textVariants}
-              initial="hidden"
-              animate={isIntersecting ? "visible" : "hidden"}
-              className="space-y-8"
-            >
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            onSubmit={onSubmit}
+            className="card space-y-4 p-6"
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  Let's Connect
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-                  I'm always open to discussing new opportunities, interesting projects, 
-                  or just having a chat about web development and technology.
-                </p>
+                <label htmlFor="name" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-ink/50 dark:text-slate-500">Name</label>
+                <input id="name" name="name" value={form.name} onChange={onChange} className="field" placeholder="Your name" />
+                {errors.name && <p className="mt-1 text-xs font-semibold text-candy">{errors.name}</p>}
               </div>
-
-              {/* Contact Details */}
-              <div className="space-y-4">
-                {contactInfo.map((item, index) => (
-                  <motion.a
-                    key={item.label}
-                    variants={cardVariants}
-                    custom={index}
-                    initial="hidden"
-                    animate={isIntersecting ? "visible" : "hidden"}
-                    whileHover={{ x: 5, scale: 1.02 }}
-                    href={item.href}
-                    className={`flex items-center gap-4 p-4 glass dark:glass-dark rounded-xl group ${
-                      item.href === '#' ? 'cursor-default' : 'cursor-pointer'
-                    }`}
-                  >
-                    <div className={`p-3 rounded-lg bg-gray-100 dark:bg-gray-800 ${item.color} group-hover:scale-110 transition-transform duration-200`}>
-                      <item.icon size={20} />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        {item.label}
-                      </p>
-                      <p className="text-gray-900 dark:text-white font-semibold">
-                        {item.value}
-                      </p>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
-
-              {/* Social Links */}
               <div>
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Follow Me
-                </h4>
-                <div className="flex gap-4">
-                  {socialLinks.map((social, index) => (
-                    <motion.a
-                      key={social.label}
-                      variants={cardVariants}
-                      custom={index + 3}
-                      initial="hidden"
-                      animate={isIntersecting ? "visible" : "hidden"}
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`p-3 glass dark:glass-dark rounded-xl text-gray-600 dark:text-gray-400 ${social.color} transition-colors duration-200`}
-                      aria-label={social.label}
-                    >
-                      <social.icon size={24} />
-                    </motion.a>
-                  ))}
-                </div>
+                <label htmlFor="email" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-ink/50 dark:text-slate-500">Email</label>
+                <input id="email" name="email" type="email" value={form.email} onChange={onChange} className="field" placeholder="you@example.com" />
+                {errors.email && <p className="mt-1 text-xs font-semibold text-candy">{errors.email}</p>}
               </div>
-            </motion.div>
-
-            {/* Contact Form */}
-            <motion.div
-              variants={textVariants}
-              initial="hidden"
-              animate={isIntersecting ? "visible" : "hidden"}
-              transition={{ delay: 0.2 }}
+            </div>
+            <div>
+              <label htmlFor="message" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-ink/50 dark:text-slate-500">Message</label>
+              <textarea id="message" name="message" rows={5} value={form.message} onChange={onChange} className="field resize-none" placeholder="Tell me about your project…" />
+              {errors.message && <p className="mt-1 text-xs font-semibold text-candy">{errors.message}</p>}
+            </div>
+            <motion.button
+              type="submit"
+              disabled={busy}
+              whileHover={{ scale: busy ? 1 : 1.02 }}
+              whileTap={{ scale: busy ? 1 : 0.97 }}
+              className="btn-primary w-full disabled:opacity-60"
             >
-              <div className="glass dark:glass-dark rounded-2xl p-6 md:p-8">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  Send a Message
-                </h3>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Name Field */}
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 ${
-                        errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                      }`}
-                      placeholder="Your full name"
-                    />
-                    {errors.name && (
-                      <motion.p
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-1"
-                      >
-                        <X size={14} />
-                        {errors.name}
-                      </motion.p>
-                    )}
-                  </div>
-
-                  {/* Email Field */}
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 ${
-                        errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                      }`}
-                      placeholder="your.email@example.com"
-                    />
-                    {errors.email && (
-                      <motion.p
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-1"
-                      >
-                        <X size={14} />
-                        {errors.email}
-                      </motion.p>
-                    )}
-                  </div>
-
-                  {/* Message Field */}
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 resize-none ${
-                        errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                      }`}
-                      placeholder="Tell me about your project or just say hello..."
-                    />
-                    {errors.message && (
-                      <motion.p
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-1"
-                      >
-                        <X size={14} />
-                        {errors.message}
-                      </motion.p>
-                    )}
-                  </div>
-
-                  {/* Submit Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      >
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
-                      </motion.div>
-                    ) : submitStatus === 'success' ? (
-                      <>
-                        <Check size={20} />
-                        Message Sent!
-                      </>
-                    ) : submitStatus === 'error' ? (
-                      <>
-                        <X size={20} />
-                        Failed to Send
-                      </>
-                    ) : (
-                      <>
-                        <Send size={20} />
-                        Send Message
-                      </>
-                    )}
-                  </motion.button>
-
-                  {/* Status Messages */}
-                  {submitStatus === 'success' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-lg"
-                    >
-                      <p className="text-green-700 dark:text-green-300 text-sm font-medium">
-                        Thank you for your message! I'll get back to you soon.
-                      </p>
-                    </motion.div>
-                  )}
-                  
-                  {submitStatus === 'error' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg"
-                    >
-                      <p className="text-red-700 dark:text-red-300 text-sm font-medium">
-                        Sorry, there was an error sending your message. Please try again.
-                      </p>
-                    </motion.div>
-                  )}
-                </form>
-              </div>
-            </motion.div>
-          </div>
+              {busy ? (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : status === 'success' ? (
+                <><Check size={16} /> Sent!</>
+              ) : (
+                <><Send size={16} /> Send message</>
+              )}
+            </motion.button>
+            {status === 'success' && (
+              <p className="flex items-center gap-2 text-sm font-semibold text-mint">
+                <Check size={15} /> Thanks — I&apos;ll get back to you soon.
+              </p>
+            )}
+            {status === 'error' && (
+              <p className="flex items-center gap-2 text-sm font-semibold text-candy">
+                <AlertCircle size={15} /> Something went wrong. Try again.
+              </p>
+            )}
+          </motion.form>
         </div>
       </div>
     </section>

@@ -1,222 +1,137 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, Sparkles } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 
-const Navbar: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
-  const [isMobile, setIsMobile] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+const links = [
+  { name: 'Home', href: '#home' },
+  { name: 'About', href: '#about' },
+  { name: 'Work', href: '#projects' },
+  { name: 'Path', href: '#experience' },
+  { name: 'Skills', href: '#skills' },
+  { name: 'Contact', href: '#contact' },
+];
 
-  const navigation = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Contact', href: '#contact' },
-  ];
+const Navbar: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState('home');
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      
-      // Update active section based on scroll position
-      const sections = navigation.map(nav => nav.href.slice(1));
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+      const ids = links.map((l) => l.href.slice(1)).concat('education');
+      const cur = ids.find((id) => {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const r = el.getBoundingClientRect();
+        return r.top <= 130 && r.bottom >= 130;
       });
-      
-      if (currentSection) {
-        setActiveSection(currentSection);
-      }
+      if (cur) setActive(cur === 'education' ? 'skills' : cur);
     };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-    // Close mobile menu when clicking outside or on scroll
-    const handleClickOutside = () => {
-      setIsMobileMenuOpen(false);
-    };
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : 'unset';
+  }, [open]);
 
-    const handleResize = () => {
-      // Close mobile menu on desktop resize
-      if (window.innerWidth >= 768) {
-        setIsMobileMenuOpen(false);
-      }
-      checkMobile();
-    };
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleResize);
-    if (isMobileMenuOpen) {
-      document.addEventListener('click', handleClickOutside);
-      // Prevent body scroll when mobile menu is open
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-      document.removeEventListener('click', handleClickOutside);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isMobileMenuOpen]);
-
-  const handleNavClick = (href: string) => {
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
-    setIsMobileMenuOpen(false);
+  const go = (href: string) => {
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    setOpen(false);
   };
 
-  const handleMobileMenuToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
   return (
     <>
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`mobile-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled 
-            ? 'bg-white/95 dark:bg-gray-900/95 md:bg-white/80 md:dark:bg-gray-900/80 md:backdrop-blur-md border-b border-gray-200/20 dark:border-gray-700/20' 
-            : 'bg-transparent'
-        }`}
+      <motion.header
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="fixed inset-x-0 top-0 z-50"
       >
-        <div className="responsive-container">
-          <div className="mobile-nav-container md:desktop-nav flex items-center justify-between">
-            {/* Logo */}
-            <motion.div
-              whileHover={!isMobile ? { scale: 1.05 } : {}}
-              className="mobile-nav-logo md:text-xl text-gray-900 dark:text-white z-50 relative"
-            >
-              <span className="text-gradient">Ammad</span>
-            </motion.div>
+        <div className="container-p">
+          <div
+            className={`mt-4 flex items-center justify-between gap-3 px-3 py-2 transition-all duration-300 ${
+              scrolled ? 'nav-shell shadow-lg shadow-ink/5' : ''
+            }`}
+          >
+            <button onClick={() => go('#home')} className="flex items-center gap-2 pl-1 font-display font-extrabold">
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-grape to-candy text-white">
+                <Sparkles size={16} />
+              </span>
+              <span className="text-ink dark:text-white">Ammad</span>
+            </button>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              {navigation.map((item) => (
-                <motion.button
-                  key={item.name}
-                  onClick={() => handleNavClick(item.href)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`desktop-nav-item relative px-3 py-2 text-sm font-medium ${
-                    activeSection === item.href.slice(1)
-                      ? 'text-primary-600 dark:text-primary-400'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
-                  }`}
-                >
-                  {item.name}
-                  {activeSection === item.href.slice(1) && (
-                    <motion.div
-                      layoutId="activeSection"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 dark:bg-primary-400"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </motion.button>
-              ))}
-            </div>
-
-            {/* Theme Toggle & Mobile Menu Button */}
-            <div className="flex items-center space-x-4">
-              <motion.button
-                whileHover={!isMobile ? { scale: 1.1 } : {}}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleTheme}
-                className="touch-target p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 z-50 relative flex items-center justify-center"
-                aria-label="Toggle theme"
-              >
-                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-              </motion.button>
-
-              <div className="md:hidden">
-                <motion.button
-                  whileHover={!isMobile ? { scale: 1.1 } : {}}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleMobileMenuToggle}
-                  className="mobile-nav-toggle text-gray-700 dark:text-gray-300 z-50 relative"
-                  aria-label="Toggle mobile menu"
-                >
-                  <AnimatePresence mode="wait">
-                    {isMobileMenuOpen ? (
-                      <motion.div
-                        key="close"
-                        initial={{ rotate: isMobile ? 0 : -90, opacity: 0 }}
-                        animate={{ rotate: 0, opacity: 1 }}
-                        exit={{ rotate: isMobile ? 0 : 90, opacity: 0 }}
-                        transition={{ duration: isMobile ? 0.1 : 0.2 }}
-                      >
-                        <X size={24} />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="menu"
-                        initial={{ rotate: isMobile ? 0 : 90, opacity: 0 }}
-                        animate={{ rotate: 0, opacity: 1 }}
-                        exit={{ rotate: isMobile ? 0 : -90, opacity: 0 }}
-                        transition={{ duration: isMobile ? 0.1 : 0.2 }}
-                      >
-                        <Menu size={24} />
-                      </motion.div>
+            <nav className="hidden items-center gap-1 md:flex">
+              {links.map((l) => {
+                const on = active === l.href.slice(1);
+                return (
+                  <button
+                    key={l.name}
+                    onClick={() => go(l.href)}
+                    className={`relative rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                      on ? 'text-white' : 'text-ink/60 hover:text-ink dark:text-slate-400 dark:hover:text-white'
+                    }`}
+                  >
+                    {on && (
+                      <motion.span
+                        layoutId="nav-blob"
+                        className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-grape to-candy"
+                        transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                      />
                     )}
-                  </AnimatePresence>
-                </motion.button>
-              </div>
+                    {l.name}
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="flex items-center gap-2">
+              <button onClick={toggleTheme} className="icon-btn h-10 w-10" aria-label="Toggle theme">
+                {theme === 'light' ? <Moon size={17} /> : <Sun size={17} />}
+              </button>
+              <button
+                onClick={() => setOpen((v) => !v)}
+                className="icon-btn h-10 w-10 md:hidden"
+                aria-label="Menu"
+              >
+                {open ? <X size={18} /> : <Menu size={18} />}
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Menu */}
         <AnimatePresence>
-          {isMobileMenuOpen && (
+          {open && (
             <>
-              {/* Mobile Menu Backdrop */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="mobile-menu-backdrop md:hidden"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => setOpen(false)}
+                className="fixed inset-0 z-40 bg-ink/40 backdrop-blur-sm md:hidden"
               />
-              
-              {/* Mobile Menu Content */}
               <motion.div
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="absolute top-full left-0 right-0 md:hidden mobile-menu-content shadow-2xl z-50"
-                onClick={(e) => e.stopPropagation()}
+                exit={{ opacity: 0, y: -12 }}
+                className="container-p relative z-50 md:hidden"
               >
-                <div className="responsive-container py-6 space-y-2">
-                  {navigation.map((item, index) => (
+                <div className="card mt-2 space-y-1 p-3 shadow-xl">
+                  {links.map((l) => (
                     <button
-                      key={item.name}
-                      onClick={() => handleNavClick(item.href)}
-                      className={`mobile-nav-item ${
-                        activeSection === item.href.slice(1)
-                          ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                          : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                      key={l.name}
+                      onClick={() => go(l.href)}
+                      className={`block w-full rounded-2xl px-4 py-3 text-left text-base font-semibold ${
+                        active === l.href.slice(1)
+                          ? 'bg-gradient-to-r from-grape to-candy text-white'
+                          : 'text-ink/70 hover:bg-ink/5 dark:text-slate-300 dark:hover:bg-white/5'
                       }`}
                     >
-                      {item.name}
+                      {l.name}
                     </button>
                   ))}
                 </div>
@@ -224,15 +139,9 @@ const Navbar: React.FC = () => {
             </>
           )}
         </AnimatePresence>
-      </motion.nav>
+      </motion.header>
 
-      {/* Skip to content link */}
-      <a
-        href="#main-content"
-        className="skip-link focus-visible"
-      >
-        Skip to main content
-      </a>
+      <a href="#main-content" className="skip-link">Skip to content</a>
     </>
   );
 };
