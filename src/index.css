@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ============================================================
-   BASE
+   BASE & TYPOGRAPHY
    ============================================================ */
 @layer base {
   html {
@@ -20,7 +20,7 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    @apply bg-cream text-ink dark:bg-ink dark:text-slate-200;
+    @apply bg-cream text-ink transition-colors duration-300 dark:bg-ink dark:text-slate-200;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Sora', 'Inter', system-ui, sans-serif;
@@ -28,15 +28,15 @@
     @apply font-bold text-ink dark:text-white;
   }
   ::selection {
-    @apply bg-grape/25 text-ink dark:text-white;
+    @apply bg-grape/30 text-grape-dark dark:bg-grape/40 dark:text-white;
   }
   section[id] {
-    scroll-margin-top: 90px;
+    scroll-margin-top: 100px;
   }
 }
 
 /* ============================================================
-   COMPONENTS
+   COMPONENTS & UI UTILITIES
    ============================================================ */
 @layer components {
   .container-p {
@@ -46,78 +46,83 @@
     @apply relative py-20 sm:py-28;
   }
 
-  /* eyebrow tag above section headings */
+  /* Eyebrow tag above section headings */
   .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full border-2 border-ink/10 bg-white px-3.5 py-1.5
-           text-xs font-bold uppercase tracking-[0.15em] text-ink/70
+    @apply inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/80 px-4 py-1.5
+           text-xs font-bold uppercase tracking-[0.18em] text-ink/70 backdrop-blur-md shadow-sm
            dark:border-white/10 dark:bg-white/5 dark:text-slate-300;
   }
 
   .h-section {
-    @apply font-display text-3xl font-extrabold leading-[1.1] sm:text-4xl md:text-5xl;
+    @apply font-display text-3xl font-extrabold leading-[1.1] sm:text-4xl md:text-5xl tracking-tight;
   }
 
-  /* gradient text */
+  /* Vibrant gradient text */
   .text-grad {
     @apply bg-gradient-to-r from-grape via-candy to-sun bg-clip-text text-transparent;
   }
 
-  /* highlighter underline on a word */
+  /* Marker highlight underline on text */
   .marker {
     @apply relative inline-block;
   }
   .marker::after {
     content: '';
-    @apply absolute inset-x-0 bottom-1 -z-10 h-3 -rotate-1 rounded-sm bg-sun/50 dark:bg-sun/30;
+    @apply absolute inset-x-0 bottom-1 -z-10 h-3 -rotate-1 rounded-sm bg-sun/40 dark:bg-sun/25;
   }
 
-  /* big playful card */
+  /* Industry Standard Cards & Glassmorphism */
   .card {
-    @apply rounded-3xl border-2 border-ink/10 bg-white transition-all duration-300
-           dark:border-white/10 dark:bg-ink-card;
+    @apply relative overflow-hidden rounded-3xl border border-ink/10 bg-white/90 backdrop-blur-md transition-all duration-300
+           dark:border-white/10 dark:bg-ink-card/90;
   }
   .card-pop {
-    @apply hover:-translate-y-1.5;
+    @apply hover:-translate-y-1.5 hover:shadow-xl dark:hover:shadow-grape/5;
+  }
+  
+  .card-glow {
+    @apply relative transition-all duration-300 before:absolute before:inset-0 before:-z-10 before:rounded-3xl before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-100;
   }
 
-  /* buttons */
+  /* High Quality Buttons */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold
-           transition-all duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-grape/30
-           min-h-[48px];
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold
+           transition-all duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-grape/40
+           active:scale-[0.97] min-h-[48px] overflow-hidden select-none;
   }
   .btn-primary {
-    @apply btn bg-gradient-to-r from-grape to-candy text-white shadow-pop
-           hover:shadow-pop-candy hover:brightness-105 active:scale-[0.98];
+    @apply btn bg-gradient-to-r from-grape via-grape to-candy text-white shadow-pop
+           hover:shadow-pop-candy hover:brightness-110 active:scale-[0.97];
   }
   .btn-outline {
-    @apply btn border-2 border-ink/15 bg-white text-ink hover:border-grape hover:text-grape
-           dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:border-grape-light dark:hover:text-grape-light;
+    @apply btn border-2 border-ink/15 bg-white/80 backdrop-blur-md text-ink hover:border-grape hover:text-grape hover:bg-grape/5
+           dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:border-grape-light dark:hover:text-grape-light dark:hover:bg-white/10;
   }
 
-  /* pill / chip */
+  /* Pill & Badges */
   .pill {
-    @apply inline-flex items-center rounded-full border-2 border-ink/10 bg-white px-3 py-1 text-xs font-semibold text-ink/70
-           dark:border-white/10 dark:bg-white/5 dark:text-slate-300;
+    @apply inline-flex items-center rounded-full border border-ink/10 bg-white/70 px-3 py-1 text-xs font-semibold text-ink/75 backdrop-blur-sm
+           transition-all duration-200 hover:border-grape/30 hover:bg-grape/5
+           dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-grape-light/30 dark:hover:bg-white/10;
   }
 
   .icon-btn {
-    @apply flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink/10 bg-white text-ink/70
-           transition-colors hover:border-grape hover:text-grape
+    @apply flex h-11 w-11 items-center justify-center rounded-full border border-ink/10 bg-white/80 text-ink/75 backdrop-blur-md
+           transition-all duration-300 hover:border-grape hover:text-grape hover:scale-105 active:scale-95
            dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-grape-light dark:hover:text-grape-light;
   }
 
-  /* form field */
+  /* Form Fields */
   .field {
-    @apply w-full rounded-2xl border-2 border-ink/10 bg-white px-4 py-3 text-sm text-ink outline-none transition-colors
-           placeholder:text-ink/35 focus:border-grape
-           dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500;
+    @apply w-full rounded-2xl border-2 border-ink/10 bg-white/80 px-4 py-3.5 text-sm text-ink outline-none transition-all duration-200
+           placeholder:text-ink/35 focus:border-grape focus:ring-4 focus:ring-grape/15
+           dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-grape-light dark:focus:ring-grape-light/15;
   }
 
-  /* floating nav */
+  /* Nav Shell */
   .nav-shell {
-    @apply rounded-full border-2 border-ink/10 bg-white/85 backdrop-blur-md
-           dark:border-white/10 dark:bg-ink-soft/80;
+    @apply rounded-full border border-ink/10 bg-white/80 backdrop-blur-xl shadow-lg shadow-black/5
+           dark:border-white/10 dark:bg-ink-soft/80 dark:shadow-black/20;
   }
 
   .skip-link {
@@ -127,7 +132,7 @@
 }
 
 /* ============================================================
-   UTILITIES
+   UTILITIES & BACKGROUND EFFECTS
    ============================================================ */
 @layer utilities {
   .blob {
@@ -139,15 +144,18 @@
   }
   .pause-hover:hover { animation-play-state: paused; }
   .dotgrid {
-    background-image: radial-gradient(currentColor 1.1px, transparent 1.1px);
-    background-size: 22px 22px;
+    background-image: radial-gradient(rgba(124, 58, 237, 0.15) 1.2px, transparent 1.2px);
+    background-size: 24px 24px;
+  }
+  .dark .dotgrid {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1.2px, transparent 1.2px);
   }
 }
 
 /* ============================================================
-   SCROLLBAR
+   SCROLLBAR DESIGN
    ============================================================ */
-::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { @apply bg-transparent; }
 ::-webkit-scrollbar-thumb {
   @apply rounded-full bg-grape/40;
@@ -157,7 +165,33 @@
 ::-webkit-scrollbar-thumb:hover { @apply bg-grape/70; }
 
 /* ============================================================
-   MOTION
+   SHINE ANIMATION FOR BUTTONS & CARDS
+   ============================================================ */
+@keyframes shine {
+  100% {
+    left: 125%;
+  }
+}
+.animate-shine {
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  transform: skewX(-25deg);
+}
+.btn-primary:hover .animate-shine {
+  animation: shine 0.75s ease-in-out;
+}
+
+/* ============================================================
+   ACCESSIBILITY & REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -175,3 +209,4 @@
 }
 * { -webkit-tap-highlight-color: transparent; }
 input, textarea { -webkit-user-select: text; user-select: text; }
+
